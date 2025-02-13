@@ -1,0 +1,273 @@
+
+
+* {
+  font-family: "Montserrat";
+  font-size: 12px;
+}
+
+
+
+body{
+  background: #f4f7fa !important;
+  
+}
+
+.maplabel{
+  font-weight: bold;
+  font-size: .75rem !important;
+}
+
+.fa-file-pdf.file-thumbnail{
+  color: tomato;
+}
+
+.fa-file-word.file-thumbnail{
+  color: #0d6efd;
+}
+
+.fa-file-excel.file-thumbnail{
+  color: #198754;
+}
+
+
+footer {
+  background-color: #647393;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+}
+
+footer a{
+  text-decoration: none;
+}
+
+.header{
+  background: none;
+}
+.header, .header a{
+  color: #161e2c
+}
+
+.sidebar-header{
+  color:#fff;
+}
+
+.btn-floating{
+  border-radius: 50% !important;
+}
+
+.field-label{
+  font-size: smaller;
+}
+.field-data{
+  border-bottom: 1px solid #ccc;
+  
+}
+
+.related-list-table a{
+  text-decoration: none;
+}
+
+.btn-primary, .btn-info{
+  background-color: #f7981c !important;
+  color: #fff !important;
+  border-color: #f7981c !important;
+}
+
+.login-form{
+  background-color: #fff;
+  width: 100%;
+  box-shadow: 0 1px 20px 0 rgb(69 90 100 / 8%);
+  margin-top:5rem;
+}
+
+.login-form i{
+  color: #f7981c;
+
+}
+.login-section{
+  border-left: 1px solid #ccc;
+}
+
+.login-form img{
+  width: 100%;
+}
+
+.login-form .vr{
+  border-right: 1px solid #ccc;
+}
+.data-table a{
+  text-decoration: none;
+}
+
+.data-table th{
+  background-color: #161e2c !important;
+    color: #f7981c;
+    border: 1px solid #161e2c;
+}
+
+.data-table{
+  border: 1px solid #161e2c;
+  border-radius: 5px;
+}
+
+.view-form label{
+  font-size: smaller;
+  display: block;
+  margin-top: 1rem;
+}
+
+.view-form-header{
+  background-color: #161e2c;
+  color: #f7981c;
+  padding: .5rem;
+  border-radius: 5px 5px 0 0;
+}
+
+.form-detail, .form-edit {
+  border: 1px solid #ccc;
+  padding-bottom: 1rem;
+  background-color: rgba(255,255,255,.75);
+}
+
+.view-form span{
+  display: block;
+  border-bottom: 1px solid #ccc;
+  
+}
+
+.fl{
+  padding-left: 0px !important;
+}
+.fr{
+  padding-right: 0px !important;
+}
+
+.data-table {
+  font-size: smaller;
+}
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+  
+
+}
+input[type=number].no-spinner::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+     margin: 0; 
+}
+.react-pdf__Page {
+  margin-top: 10px;
+}
+.react-pdf__Page__textContent {
+  border: 1px solid darkgrey;
+  box-shadow: 5px 5px 5px 1px #ccc;
+  border-radius: 5px;
+}
+
+.react-pdf__Page__annotations.annotationLayer {
+  padding: 20px;
+}
+
+.react-pdf__Page__canvas {
+  margin: 0 auto;
+}
+
+/* For all pages */
+.all-page-container {
+  height: 100%;
+  max-height: 500px;
+  overflow: auto;
+}
+
+.myTable {
+  width: 800px;
+}
+
+.fc-event{
+  cursor: pointer;
+}
+table.fc-col-header{
+  background-color:#161e2c;
+}
+
+table.fc-col-header a{
+  color: #fff !important;
+}
+th.fc-col-header-cell{
+  padding: .5rem 0 .5rem 0 !important;
+  /*border: 1px solid #161e2c !important;*/
+}
+
+.btn-outline-primary{
+  border: 1px solid #f7981c !important;
+    color: #fff !important;
+    background: #f7981c !important;
+
+}
+
+.btn-custom{
+  border: 1px solid #1c3df7 !important;
+    color: #fff !important;
+    background: #1c3df7 !important;
+}
+
+/*
+ * Progressbar
+ */
+
+ .bar {
+  --d: 1rem;       /* arrow depth */
+  --gap: 0.3rem;   /* arrow thickness, gap */
+
+  display: flex;
+  margin-right: var(--d);
+}
+
+.bar-step {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0.6rem var(--d);
+  margin-right: calc(var(--d) * -1 + var(--gap));
+  background: #d3d7dd;
+  color: #23468c;
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - var(--d)) 0%,
+    100% 50%,
+    calc(100% - var(--d)) 100%,
+    0% 100%,
+    var(--d) 50%
+  );
+}
+
+.bar-step:first-child {
+  clip-path: polygon(
+    0% 0%,
+    calc(100% - var(--d)) 0%,
+    100% 50%,
+    calc(100% - var(--d)) 100%,
+    0% 100%
+  );
+}
+
+
+.bar-step.active {
+  background: #23468c;
+  color: #fff;
+}
+
+.bar-step.completed {
+  background: rgb(79,167,86);
+  color: #fff;
+}
