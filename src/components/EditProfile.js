@@ -16,7 +16,7 @@ const EditProfile = ({ userId }) => {
     firstname: "",
     lastname: "",
     email: "",
-    phone: "",
+    whatsapp_number: "",
   });
     const [body, setBody] = useState();
   const [user, setUser] = useState({ password: '', confirmpassword: '' });
@@ -38,7 +38,13 @@ const EditProfile = ({ userId }) => {
   useEffect(() => {
     async function init() {
       let result = await WhatsAppAPI.getLoginUserData();
+
+      result.whatsapp_number = result?.whatsapp_number?.length === 12 && result?.whatsapp_number?.startsWith("91") 
+        ? result.whatsapp_number.slice(2) 
+        : result.whatsapp_number;
+      
       setProfile(result);
+      
       setBody(profileImg + '/' + result.id);
     }
     init();
@@ -66,7 +72,7 @@ const EditProfile = ({ userId }) => {
     if (name === 'email') {
       setEmailError(!emailRegex.test(value) ? 'Invalid email format.' : '');
     }
-    if (name === "phone") {
+    if (name === "whatsapp_number") {
       if (!phoneRegex.test(value)) {
         setPhoneError("Phone number must be exactly 10 digits");
       } else {
@@ -82,9 +88,20 @@ const EditProfile = ({ userId }) => {
     try {
       let result = {};
       if (selectedFiles === null) {
-        result = await WhatsAppAPI.saveUser(profile);
+        profile.whatsapp_number = profile.whatsapp_number.length === 10 
+        ? "91" + profile.whatsapp_number 
+        : profile.whatsapp_number;
+      console.log("profile->",profile);
+      
+      
+      result = await WhatsAppAPI.saveUser(profile);
+console.log("result-?",result);
+if(result.errors){
+  toast.error(result.errors);
+}else{
+  toast.success('Record saved successfully.');
+}
 
-        toast.success('Record saved successfully.');
       } else {
         result = await WhatsAppAPI.saveStaffMemberEditProfile(profile.id, selectedFiles, JSON.stringify(JSON.stringify(profile)));
         localStorage.setItem('myimage', body);
@@ -138,9 +155,9 @@ const EditProfile = ({ userId }) => {
     return Boolean(profile.firstname?.trim()) &&
       Boolean(profile.lastname?.trim()) &&
       Boolean(profile.email?.trim()) &&
-      Boolean(profile.phone?.trim()) &&
-      Boolean(profile.phone?.length == 10) &&
-      phoneRegex.test(profile.phone) &&
+      Boolean(profile.whatsapp_number?.trim()) &&
+      Boolean(profile.whatsapp_number?.length == 10) &&
+      phoneRegex.test(profile.whatsapp_number) &&
       !emailError &&
       phoneError === "";
   };
@@ -306,9 +323,9 @@ const EditProfile = ({ userId }) => {
                     style={{ height: "36px" }}
                     required
                     type="phone"
-                    name="phone"
+                    name="whatsapp_number"
                     placeholder="Enter Phone"
-                    value={profile.phone}
+                    value={profile.whatsapp_number}               
                     onChange={handleChange}
                   />
                   {phoneError && (

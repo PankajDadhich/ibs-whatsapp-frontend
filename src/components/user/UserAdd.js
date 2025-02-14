@@ -103,9 +103,9 @@ const UserAdd = () => {
         return Boolean(user.firstname?.trim()) &&
             Boolean(user.lastname?.trim()) &&
             Boolean(user.email?.trim()) &&
-            Boolean(user.phone?.trim()) &&
-            Boolean(user.phone?.length === 10) &&
-            phoneRegex.test(user.phone) &&
+            Boolean(user.whatsapp_number?.trim()) &&
+            Boolean(user.whatsapp_number?.length === 10) &&
+            phoneRegex.test(user.whatsapp_number) &&
             Boolean(user.userrole?.trim()) &&
             Boolean(option?.value) &&
             !emailError &&
@@ -185,13 +185,13 @@ const UserAdd = () => {
         }
 
 
-        if (name === "phone") {
-            if (!phoneRegex.test(value)) {
-                setPhoneError("Phone number must be exactly 10 digits");
-            } else {
-                setPhoneError("");
-            }
-        }
+        //if (name === "phone") {
+        //    if (!phoneRegex.test(value)) {
+        //        setPhoneError("Phone number must be exactly 10 digits");
+        //    } else {
+        //        setPhoneError("");
+        //    }
+        //}
         if (name === "whatsapp_number" && value.length === 0) {
             setWhatsappError();
         }
@@ -199,7 +199,7 @@ const UserAdd = () => {
         if (name === "whatsapp_number") {
             if (value) {
                 if (!phoneRegex.test(value)) {
-                    setWhatsappError("Whatsapp number must be exactly 10 digits");
+                    setWhatsappError("Phone number must be exactly 10 digits");
                 } else {
                     setWhatsappError();
                 }
@@ -290,7 +290,7 @@ const UserAdd = () => {
 
 
                                 <Row className='mb-3'>
-                                    <Col lg={6} sm={12} xs={12}>
+                                    {/*<Col lg={6} sm={12} xs={12}>
                                         <Form.Group className="ms-3">
                                             <Form.Label htmlFor="phone">Phone</Form.Label>
                                             <Form.Control
@@ -305,6 +305,26 @@ const UserAdd = () => {
                                             {phoneError && (
                                                 <small className="text-danger"> {phoneError}</small>
                                             )}
+                                        </Form.Group>
+                                    </Col>*/}
+                                        <Col lg={6} sm={12} xs={12}>
+                                        <Form.Group className="ms-3">
+                                            <Form.Label htmlFor="phone">Phone
+                                                <i className="fa-solid fa-circle-info ms-2"
+                                                    title="Changing your Phone number will require you to log out and log back in to refresh WhatsApp settings."
+                                                ></i>
+                                            </Form.Label>
+                                            <Form.Control
+                                                style={{ height: "36px" }}
+                                                type="text"
+                                                name="whatsapp_number"
+                                                placeholder="Enter Phone Number"
+                                                value={user.whatsapp_number}
+                                                onChange={handleChange}
+                                            />
+                                            {whatsappError ? (
+                                                <small className="text-danger"> {whatsappError}</small>
+                                            ) : ''}
                                         </Form.Group>
                                     </Col>
                                     <Col lg={6} sm={12} xs={12}>
@@ -384,23 +404,18 @@ const UserAdd = () => {
                                         </Form.Group>
                                     </Col>
                                     <Col lg={6} sm={12} xs={12}>
+
                                         <Form.Group className="ms-3">
-                                            <Form.Label htmlFor="phone">Whatsapp Number
-                                                <i className="fa-solid fa-circle-info ms-2"
-                                                    title="Changing your WhatsApp number will require you to log out and log back in to refresh WhatsApp settings."
-                                                ></i>
-                                            </Form.Label>
-                                            <Form.Control
-                                                style={{ height: "36px" }}
-                                                type="text"
-                                                name="whatsapp_number"
-                                                placeholder="Enter Whatsapp Number"
-                                                value={user.whatsapp_number}
-                                                onChange={handleChange}
+                                            <Form.Label htmlFor="isactive">Active</Form.Label>
+                                            <Form.Check
+
+                                                name="isactive"
+                                                type="checkbox"
+                                                value="true"
+                                                checked={user.isactive === true}
+                                                id="inline-checkbox-9"
+                                                onChange={handleActive}
                                             />
-                                            {whatsappError ? (
-                                                <small className="text-danger"> {whatsappError}</small>
-                                            ) : ''}
                                         </Form.Group>
                                     </Col>
                                 </Row>
@@ -429,21 +444,7 @@ const UserAdd = () => {
                                             </Form.Group>
                                         </Col>
                                     )}
-                                    <Col lg={6} sm={12} xs={12}>
-
-                                        <Form.Group className="ms-3">
-                                            <Form.Label htmlFor="isactive">Active</Form.Label>
-                                            <Form.Check
-
-                                                name="isactive"
-                                                type="checkbox"
-                                                value="true"
-                                                checked={user.isactive === true}
-                                                id="inline-checkbox-9"
-                                                onChange={handleActive}
-                                            />
-                                        </Form.Group>
-                                    </Col>
+                                
                                 </Row>
 
                                 <Row>

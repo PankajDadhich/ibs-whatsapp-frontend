@@ -151,13 +151,13 @@ const UserView = ({selectedWhatsAppSetting}) => {
                 <label>Email</label>
                 <span>{user.email ? user.email : <>&nbsp;</>}</span>
               </Col>
-              <Col lg={6} sm={6} xs={6} className="mb-2">
+              {/*<Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>Phone</label>
                 <span>{user.phone ? user.phone : <>&nbsp;</>}</span>
-              </Col>
+              </Col>*/}
               <Col lg={6} sm={6} xs={6} className="mb-2">
-                <label>WhatsApp Number</label>
-                <span>{user.whatsapp_number ? user.whatsapp_number : <>&nbsp;</>}</span>
+                <label>Phone</label>
+                <span>{user.whatsapp_number ? user.whatsapp_number.length===12?user.whatsapp_number.substring(2) :user.whatsapp_number : <>&nbsp;</>}</span>
               </Col>
               <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>User Role</label>
