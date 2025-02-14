@@ -67,7 +67,7 @@ function App() {
   const [userInfo, setUserInfo] = useState({});
   const [permissions, setPermissions] = useState();
   const [connectedSocket, setConnectedSocket] = useState();
-  const [selectedWhatsAppSetting, setSelectedWhatsAppSetting] = useState(localStorage.getItem('selectedWhatsAppSetting') || '');
+  const [selectedWhatsAppSetting, setSelectedWhatsAppSetting] = useState(sessionStorage.getItem('selectedWhatsAppSetting') || '');
 
   const handleWhatsAppSettingChange = (newSettingId) => {
     setSelectedWhatsAppSetting(newSettingId);
@@ -95,7 +95,7 @@ function App() {
 
   useEffect(() => {
     try {
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       if (token) {
         let user = jwt_decode(token);
         setUserInfo(user);
@@ -148,7 +148,7 @@ function App() {
     } catch (error) {
       console.error('Error in useEffect:', error);
     }
-  }, [localStorage.getItem('token')]);
+  }, [sessionStorage.getItem('token')]);
 
 
 

@@ -46,7 +46,7 @@ const EmailComposer = (props) => {
     ];
 
     useEffect(() => {
-        let userInfo = jwt_decode(localStorage.getItem('token'));
+        let userInfo = jwt_decode(sessionStorage.getItem('token'));
         let tempValue = { id: userInfo.id, 'username': userInfo.username, email: userInfo.email };
         setUser(tempValue);
         setEmail({ ...email, ['editorHtml']: `<br/><br/><b>Thanks</b><br/>${userInfo.username}` });

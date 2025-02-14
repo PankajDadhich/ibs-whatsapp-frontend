@@ -17,7 +17,7 @@ import jwt_decode from "jwt-decode";
 
 const CreateCompany = () => {
   const [userInfo, setUserInfo] = useState(
-    jwt_decode(localStorage.getItem("token"))
+    jwt_decode(sessionStorage.getItem("token"))
   );
   const location = useLocation();
   const initialData = location.state;

@@ -17,7 +17,7 @@ import jwt_decode from "jwt-decode";
 import MessageTemplateModal from './MessageTemplateModal';
 
 const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWhatsAppSetting }) => {
-    const [userInfo, setUserInfo] = useState(jwt_decode(localStorage.getItem('token')));
+    const [userInfo, setUserInfo] = useState(jwt_decode(sessionStorage.getItem('token')));
     const [input, setInput] = useState('');
     const [messages, setMessages] = useState([]);
     const [receivedMessage, setReceivedMessage] = useState();

@@ -12,7 +12,7 @@ import { NameInitialsAvatar } from 'react-name-initials-avatar'; // npm install 
 const UserList = () => {
   const navigate = useNavigate();
   const [body, setBody] = useState([]);
-  const [userInfo, setUserInfo] = useState(jwt_decode(localStorage.getItem('token')));
+  const [userInfo, setUserInfo] = useState(jwt_decode(sessionStorage.getItem('token')));
   const [lead, setLead] = useState();
   // const profileImage = '/user_images/users';
   const profileImage = `/public/${userInfo.tenantcode}/users`;

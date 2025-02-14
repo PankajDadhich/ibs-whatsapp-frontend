@@ -3,7 +3,7 @@ import { Alert } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
 
 const Notification = (props) => {
-  const [notifications, setNotifications] = useState(JSON.parse(localStorage.getItem("notifications")));
+  const [notifications, setNotifications] = useState(JSON.parse(sessionStorage.getItem("notifications")));
 
 
   return (

@@ -14,7 +14,7 @@ const LeadList = () => {
   const [body, setBody] = useState([]);
   const [leadname, setLeadName] = useState();
   const [lead, setLead] = useState();
-  const [leadStatusArray, setleadStatusArray] = useState(JSON.parse(localStorage.getItem('lead_status')));
+  const [leadStatusArray, setleadStatusArray] = useState(JSON.parse(sessionStorage.getItem('lead_status')));
   const [isSpinner, setIsSpinner] = useState(false);
 
   useEffect(() => {

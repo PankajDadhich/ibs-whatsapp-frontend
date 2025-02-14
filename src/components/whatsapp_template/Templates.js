@@ -52,7 +52,7 @@ const Templates = ({selectedWhatsAppSetting}) => {
 
     
     const fetchAllTemplates = async (selectedWhatsAppSetting) => {
-        let user = jwt_decode(localStorage.getItem('token'));
+        let user = jwt_decode(sessionStorage.getItem('token'));
         setUserInfo(user);
 
         const result = await WhatsAppAPI.getAllTemplates(selectedWhatsAppSetting);

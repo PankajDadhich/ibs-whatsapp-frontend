@@ -8,7 +8,7 @@ import helper from '../common/helper';
 import * as constants from '../../constants/CONSTANT';
 
 const AddGroupModal = ({ show, onHide, fetchGroupRecords, selectedGroup }) => {
-    const [userInfo, setUserInfo] = useState(jwt_decode(localStorage.getItem('token')));
+    const [userInfo, setUserInfo] = useState(jwt_decode(sessionStorage.getItem('token')));
     const [groupName, setGroupName] = useState("");
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [selectedLeads, setSelectedLeads] = useState([]);

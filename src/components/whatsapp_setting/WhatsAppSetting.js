@@ -19,7 +19,7 @@ const WhatsAppSetting = () => {
     const [isSpinner, setIsSpinner] = useState(false);
     const [modalShowHide, setModalShowHide] = useState(false);
     const [rowData, setRowData] = useState();
-    const [userInfo, setUserInfo] = useState(jwt_decode(localStorage.getItem('token')));
+    const [userInfo, setUserInfo] = useState(jwt_decode(sessionStorage.getItem('token')));
 
     useEffect(() => {
         fetchData();

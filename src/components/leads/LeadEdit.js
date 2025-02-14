@@ -22,7 +22,7 @@ const LeadEdit = () => {
     const [cities, setCities] = useState([]);
     const [selectedCity, setSelectedCity] = useState('');
     const [option, setoption] = useState();
-    const [leadStatusArray, setleadStatusArray] = useState(JSON.parse(localStorage.getItem('lead_status')));
+    const [leadStatusArray, setleadStatusArray] = useState(JSON.parse(sessionStorage.getItem('lead_status')));
     const [emailError, setEmailError] = useState("");
     const [phoneError, setPhoneError] = useState("");
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -57,7 +57,7 @@ const LeadEdit = () => {
     const [lead, setLead] = useState(location.state ? location.state : {});
     let userInfo;
     useEffect(() => {
-        let userInfo = jwt_decode(localStorage.getItem('token'));
+        let userInfo = jwt_decode(sessionStorage.getItem('token'));
 
         if (location?.state) {
             setLostReason(location.state.iswon === false);

@@ -3,7 +3,7 @@ import * as constants from "../../constants/CONSTANT";
 
 const helper = {
   checkPermission(perm) {
-    let userInfo = jwt_decode(localStorage.getItem("token"));
+    let userInfo = jwt_decode(sessionStorage.getItem("token"));
     if (!userInfo.permissions) return false;
     return userInfo.permissions.some(function (el) {
       return el.name === perm;
@@ -63,8 +63,8 @@ const helper = {
   },
 
   async fetchWithAuth(url, method, body = {}, bodyType = undefined) {
-    let accessToken = localStorage.getItem("token");
-    const refreshToken = localStorage.getItem("r-t");
+    let accessToken = sessionStorage.getItem("token");
+    const refreshToken = sessionStorage.getItem("r-t");
 
     if (!accessToken || !refreshToken) throw new Error("No tokens available");
 
@@ -88,7 +88,7 @@ const helper = {
         const data = await response.json();
         if (data.success) {
           accessToken = data.authToken;
-          localStorage.setItem("token", accessToken);
+          sessionStorage.setItem("token", accessToken);
         }
       }
 
@@ -113,8 +113,8 @@ const helper = {
         });
       }
     } else {
-      localStorage.removeItem("token");
-      localStorage.removeItem("r-t");
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("r-t");
       window.location.href = "/login";
     }
   },

@@ -23,7 +23,7 @@ const TemplateModal = ({
   selectedWhatsAppSetting,
 }) => {
   const [userInfo, setUserInfo] = useState(
-    jwt_decode(localStorage.getItem("token"))
+    jwt_decode(sessionStorage.getItem("token"))
   );
   const [selectedCategory, setSelectedCategory] = useState("");
   const [filteredTemplates, setFilteredTemplates] = useState([]);

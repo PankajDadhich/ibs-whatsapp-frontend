@@ -25,22 +25,22 @@ const Login = () => {
       const result = await authApi.login(credentials);
 
       if (result.success) {
-       localStorage.setItem("token", result.authToken);
-       localStorage.setItem("r-t", result.refreshToken);
+       sessionStorage.setItem("token", result.authToken);
+       sessionStorage.setItem("r-t", result.refreshToken);
 
         let data = '';
         if (data)
-          localStorage.setItem("myimage", window.URL.createObjectURL(data));
+          sessionStorage.setItem("myimage", window.URL.createObjectURL(data));
         else
-          localStorage.setItem("myimage", "/abdul-pathan.png");
+          sessionStorage.setItem("myimage", "/abdul-pathan.png");
 
         let settingResult = await WhatsAppAPI.fetchCompanySetting('lead_status_setting');
         if (settingResult && settingResult.setting) {
-          localStorage.setItem('lead_status', settingResult.setting.configuration);
+          sessionStorage.setItem('lead_status', settingResult.setting.configuration);
         } else {
-          localStorage.setItem('lead_status', JSON.stringify(constants.LEAD_STATUS_VALUES));
+          sessionStorage.setItem('lead_status', JSON.stringify(constants.LEAD_STATUS_VALUES));
         }
-        localStorage.setItem('selectedWhatsAppSetting', '');
+        sessionStorage.setItem('selectedWhatsAppSetting', '');
 
         // navigate("/");
         window.location.assign('/')

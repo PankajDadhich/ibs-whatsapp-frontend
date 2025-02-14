@@ -16,8 +16,8 @@ const Sidebar = () => {
 
   useEffect(() => {
     try {
-      if (localStorage.getItem('token')) {
-        let user = jwt_decode(localStorage.getItem('token'));
+      if (sessionStorage.getItem('token')) {
+        let user = jwt_decode(sessionStorage.getItem('token'));
         setUserInfo(user);
         // var perm = user.permissions.map(function (obj) {
         //   return obj.name;

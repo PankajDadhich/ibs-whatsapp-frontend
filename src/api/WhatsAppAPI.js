@@ -16,7 +16,7 @@ const WhatsAppAPI = {
   //.............. Fetch Lead By Id .............................
   async fetchUserById(id) {
     id = id.trim();
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/auth/users/" + id, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -34,7 +34,7 @@ const WhatsAppAPI = {
 
 
   async fetchTasksWithoutParent() {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/tasks/opentasks", {
     //   method: 'GET',
     //   mode: 'cors',
@@ -54,7 +54,7 @@ const WhatsAppAPI = {
   },
 
   async sendEmailTask(task) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/tasks/sendemail", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -70,7 +70,7 @@ const WhatsAppAPI = {
   },
 
   async fetchLeadReports(reportname) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/reports/byname/" + reportname, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -90,7 +90,7 @@ const WhatsAppAPI = {
   },
 
   async getCurrentUserTrackingRec() {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/usertrackings/track/currentrecord",
     //   {
@@ -119,7 +119,7 @@ const WhatsAppAPI = {
     const formData = new FormData();
     formData.append('file', selectedFiles);
     formData.append('staffRecord', staffMember);
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/auth/" + userid + "/profile", {
     //   method: "PUT",
     //   mode: "cors",
@@ -136,7 +136,7 @@ const WhatsAppAPI = {
 
 
   async createCheckInRecord(locationRecord) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
 
     // let response = await fetch(constants.API_BASE_URL + "/api/usertrackings", {
     //   method: "POST",
@@ -161,7 +161,7 @@ const WhatsAppAPI = {
   },
 
   async fetchUsertrackingsWithstaffId(staffId) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/usertrackings/staff/" + staffId, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -180,7 +180,7 @@ const WhatsAppAPI = {
   },
 
   async handlCheckOut(locationRecord) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/usertrackings/" + locationRecord.id,
     //   {
@@ -208,7 +208,7 @@ const WhatsAppAPI = {
 
 
   async getLoginUserData() {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/auth/getuser", {
     //   method: 'GET',
     //   mode: 'cors',
@@ -225,7 +225,7 @@ const WhatsAppAPI = {
 
   // working
   async fetchCompanySetting(settingName) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/common/settings/" + settingName, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -242,7 +242,7 @@ const WhatsAppAPI = {
 
 
   async updateUser(user) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/auth/updatepassword",
     //   {
@@ -263,7 +263,7 @@ const WhatsAppAPI = {
   //************************ Accounts ***********************************//
   //.................... Crate Account ...................................
   async createAccount(account) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/accounts", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -279,7 +279,7 @@ const WhatsAppAPI = {
   },
 
   async saveAccount(account) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/accounts/" + account.id, {
     //   method: "PUT",
@@ -298,7 +298,7 @@ const WhatsAppAPI = {
 
   //.......... Fetch All Accounts ..........................................
   async fetchAccounts() {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/accounts", {
     //   method: 'GET',
     //   mode: 'cors',
@@ -323,7 +323,7 @@ const WhatsAppAPI = {
 
   //.............. Fetch Account By Id .............................
   async fetchAccountById(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/accounts/" + id, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -341,7 +341,7 @@ const WhatsAppAPI = {
 
   //............. Delete Account ............................
   async deleteAccount(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/accounts/" + id,
     //   {
@@ -360,7 +360,7 @@ const WhatsAppAPI = {
 
 
   async createUser(user) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/auth/createuser", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -376,7 +376,7 @@ const WhatsAppAPI = {
   },
 
   async saveUser(user) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/auth/" + user.id, {
     //   method: "PUT",
@@ -395,7 +395,7 @@ const WhatsAppAPI = {
 
   //****************** File  *******************
   async createFile(id, formData) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/files/" + id, {//whatsNum
     //   method: "POST",
     //   mode: "cors",
@@ -412,7 +412,7 @@ const WhatsAppAPI = {
 
   //************************ files ***********************************//
   async saveFiles(file) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/files/" + file.id, {
     //   method: "PUT",
@@ -430,7 +430,7 @@ const WhatsAppAPI = {
   },
 
   async deleteFile(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/files/" + id,
     //   {
@@ -449,7 +449,7 @@ const WhatsAppAPI = {
 
   async getFilterData(textName, cityName, recordType) {
     const params = new URLSearchParams({ textName: textName || '', cityName: cityName || '', recordType: recordType || '' }).toString();
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(`${constants.API_BASE_URL}/api/whatsapp/chat/filter?${params}`, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -472,7 +472,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(`${constants.API_BASE_URL}/api/whatsapp/chat/unread_count?whatsapp_setting_number=${number}`, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -496,7 +496,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(`${constants.API_BASE_URL}/api/whatsapp/chat/mark_as_read?whatsapp_setting_number=${number}`, {
     //   method: 'POST',
     //   mode: 'cors',
@@ -519,7 +519,7 @@ const WhatsAppAPI = {
 
   //************************* WHATSAPP SETTING || START *******************************************************************//
   async getWhatsAppSettingRecord() {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp_setting", {///api/whatsapp_setting?name=" + name,
     //   method: 'GET',
     //   mode: 'cors',
@@ -539,7 +539,7 @@ const WhatsAppAPI = {
   },
 
   async insertWhatsAppSettingRecords(reqbody) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp_setting", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -555,7 +555,7 @@ const WhatsAppAPI = {
   },
 
   async updateWhatsAppSettingRecord(data) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp_setting/" + data.id, {
     //   method: "PUT",
     //   mode: "cors",
@@ -578,7 +578,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(`${constants.API_BASE_URL}/api/webhook_template/alltemplate?whatsapp_setting_number=${number}`, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -596,7 +596,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(`${constants.API_BASE_URL}/api/webhook_template/approved/template?whatsapp_setting_number=${number}`, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -614,7 +614,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     const formData = new FormData();
     formData.append("files", file);
     // let response = await fetch(`${constants.API_BASE_URL}/api/webhook_template?whatsapp_setting_number=${number}`, {
@@ -634,7 +634,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     const formData = new FormData();
     formData.append("files", file);
     formData.append("uploadSessionId", sessionId)
@@ -655,7 +655,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(`${constants.API_BASE_URL}/api/webhook_template/template?whatsapp_setting_number=${number}`, {
     //   method: 'POST',
     //   mode: 'cors',
@@ -674,7 +674,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(`${constants.API_BASE_URL}/api/webhook_template/template/${id}?whatsapp_setting_number=${number}`, {
     //   method: 'POST',
     //   mode: 'cors',
@@ -693,7 +693,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // const response = await fetch(`${constants.API_BASE_URL}/api/webhook_template/temp/auth?whatsapp_setting_number=${number}`, {
     //   method: 'POST',
     //   mode: 'cors',
@@ -712,7 +712,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + '/api/webhook_template/template?hsm_id=' + id + '&name=' + name + '&whatsapp_setting_number=' + number, {
     //   method: "DELETE",
     //   mode: "cors",
@@ -731,7 +731,7 @@ const WhatsAppAPI = {
 
   //************************* CREATE TEMPLATE IN DATABASE || START *********************************//
   async createMessageTemplateData(reqbody) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/message/template", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -748,7 +748,7 @@ const WhatsAppAPI = {
 
   // delete template database record
   async deleteTemplateDatabase(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/message/template/" + id, {
     //   method: "DELETE",
     //   mode: "cors",
@@ -767,7 +767,7 @@ const WhatsAppAPI = {
 
   //************************* CREATE Campaign Records || START **********************************************//
   async getCampaignData(number) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!number || number.trim() === "") {
       return [];
     }
@@ -790,7 +790,7 @@ const WhatsAppAPI = {
   },
 
   async insertCampaignRecords(reqbody) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/campaign", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -806,7 +806,7 @@ const WhatsAppAPI = {
   },
 
   async updateCampaignRecord(data) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/campaign/" + data.id, {
     //   method: "PUT",
     //   mode: "cors",
@@ -823,7 +823,7 @@ const WhatsAppAPI = {
   },
 
   async downloadCampaignFile(filename) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     try {
       // let response = await fetch(
       //   constants.API_BASE_URL + "/api/whatsapp/campaign/download/" + filename, {
@@ -856,7 +856,7 @@ const WhatsAppAPI = {
   },
 
   async getMsgHistoryDownload(id) {// 
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
 
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/message/history/download/" + id, {
     //   method: 'GET',
@@ -878,7 +878,7 @@ const WhatsAppAPI = {
   },
 
   async deleteCampaignRecord(id) {//not use
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/campaign/" + id, {
     //   method: "DELETE",
     //   mode: "cors",
@@ -894,7 +894,7 @@ const WhatsAppAPI = {
   },
 
   async createCampaignFile(id, formData) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/campaign/file/" + id, {
     //   method: "POST",
     //   mode: "cors",
@@ -915,7 +915,7 @@ const WhatsAppAPI = {
 
   //************************* SEND WHATSAPP MESSAGE || START **********************************************//
   async sendWhatsAppTemplateMessage(reqbody, number) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!number || number.trim() === "") {
       return [];
     }
@@ -934,7 +934,7 @@ const WhatsAppAPI = {
   },
 
   async sendSingleWhatsAppTextMessage(reqbody, number) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!number || number.trim() === "") {
       return [];
     }
@@ -956,7 +956,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(`${constants.API_BASE_URL}/api/webhook_template/documentId?whatsapp_setting_number=${number}`, {
     //   method: 'POST',
     //   mode: 'cors',
@@ -977,7 +977,7 @@ const WhatsAppAPI = {
     if (!business_number || business_number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(`${constants.API_BASE_URL}/api/whatsapp/message/history/${number}?whatsapp_setting_number=${business_number}`, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -998,7 +998,7 @@ const WhatsAppAPI = {
   },
 
   async insertMsgHistoryRecords(reqbody) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/message/history", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -1017,7 +1017,7 @@ const WhatsAppAPI = {
     if (!number || number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(`${constants.API_BASE_URL}/api/whatsapp/group/message/history/${id}?whatsapp_setting_number=${number}`, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1041,7 +1041,7 @@ const WhatsAppAPI = {
 
   // *******response Message || START ***********************************
   async getResponseMessageData() {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/response_message", {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1061,7 +1061,7 @@ const WhatsAppAPI = {
   },
 
   async inserResponseMessageRecord(reqbody) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/response_message", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -1077,7 +1077,7 @@ const WhatsAppAPI = {
   },
 
   async updateResponseMessageRecord(data) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/response_message/" + data.id, {
     //   method: "PUT",
     //   mode: "cors",
@@ -1094,7 +1094,7 @@ const WhatsAppAPI = {
   },
 
   async deleteResponseMessageRecord(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/response_message/" + id, {
     //   method: "DELETE",
     //   mode: "cors",
@@ -1113,7 +1113,7 @@ const WhatsAppAPI = {
 
   //************START || GROUP  **************************************************/
   async fetchGroupsById(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/groups/" + id, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1129,7 +1129,7 @@ const WhatsAppAPI = {
 
 
   async fetchGroups(status) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     const params = new URLSearchParams({ status: status || '' }).toString();
 
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/groups?" + params, {
@@ -1151,7 +1151,7 @@ const WhatsAppAPI = {
 
   },
   async createGroup(formData) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     try {
       // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/groups", {
@@ -1177,7 +1177,7 @@ const WhatsAppAPI = {
     }
   },
   async addMoreMembers(groupId, formData) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     try {
       // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/groups/add_members/" + groupId, {
@@ -1204,7 +1204,7 @@ const WhatsAppAPI = {
   },
 
   async deleteGroupMember(member_id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/whatsapp/groups/member/" + member_id,
     //   {
@@ -1222,7 +1222,7 @@ const WhatsAppAPI = {
   },
 
   async changeGroupStatus(group_id, status) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // const response = await fetch(
     //   `${constants.API_BASE_URL}/api/whatsapp/groups/${group_id}/status`,
     //   {
@@ -1245,7 +1245,7 @@ const WhatsAppAPI = {
 
   // **************Lead || START ************************************
   // async fetchLead() {
-  //   const token = localStorage.getItem("token");
+  //   const token = sessionStorage.getItem("token");
   //   let response = await fetch(constants.API_BASE_URL + "/api/leads", {
   //     method: 'GET',
   //     mode: 'cors',
@@ -1279,7 +1279,7 @@ const WhatsAppAPI = {
   },
 
   async fetchLeadById(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/leads/" + id, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1298,7 +1298,7 @@ const WhatsAppAPI = {
   },
 
   async createLead(lead) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/leads",
     //   {
     //     method: 'POST',
@@ -1315,7 +1315,7 @@ const WhatsAppAPI = {
   },
 
   async updateLead(lead) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/leads/" + lead.id,
     //   {
@@ -1334,7 +1334,7 @@ const WhatsAppAPI = {
   },
 
   async deleteLead(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/leads/" + id,
     //   {
@@ -1356,7 +1356,7 @@ const WhatsAppAPI = {
 
 
   async fetchLeadCount() {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/common/leadcount", {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1377,7 +1377,7 @@ const WhatsAppAPI = {
   },
 
   async fetchallActiveGroups() {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/common/activegroups", {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1401,7 +1401,7 @@ const WhatsAppAPI = {
     if (!business_number || business_number.trim() === "") {
       return [];
     }
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/common/campaignstatus/" + business_number, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1421,7 +1421,7 @@ const WhatsAppAPI = {
   },
 
   async fetchAutoResponseCount() {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/common/autoresponse", {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1441,7 +1441,7 @@ const WhatsAppAPI = {
   },
 
   async fetchChatGptResponse(prompt) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
 
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/common/chatgpt", {
     //   method: 'POST',
@@ -1466,7 +1466,7 @@ const WhatsAppAPI = {
 
 
   async getRazorPayData(obj) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/online_payment", {
     //   method: 'POST',
     //   headers: {
@@ -1485,7 +1485,7 @@ const WhatsAppAPI = {
   },
 
   async pdfData(obj, number) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     if (!number || number.trim() === "") {
       return [];
     }
@@ -1504,7 +1504,7 @@ const WhatsAppAPI = {
   },
 
   async activateWhatsAppSetting(setting_id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
 
     // let response = await fetch(
     //   `${constants.API_BASE_URL}/api/whatsapp_setting/activate/${setting_id}`,
@@ -1523,7 +1523,7 @@ const WhatsAppAPI = {
   },
 
   async getModuleData(status = null) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     const queryParam = status ? `?status=${status}` : '';
     // let response = await fetch(constants.API_BASE_URL + `/api/whatsapp/module${queryParam}`, {
     //   method: 'GET',
@@ -1545,7 +1545,7 @@ const WhatsAppAPI = {
 
 
   async insertModuleRecord(reqbody) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/module", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -1561,7 +1561,7 @@ const WhatsAppAPI = {
   },
 
   async updateModuleRecord(data) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/module/" + data.id, {
     //   method: "PUT",
     //   mode: "cors",
@@ -1578,7 +1578,7 @@ const WhatsAppAPI = {
   },
 
   async deleteModuleRecord(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/whatsapp/module/" + id,
     //   {
@@ -1597,7 +1597,7 @@ const WhatsAppAPI = {
 
 
   async getPlanData(status = null) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     const queryParam = status ? `?status=${status}` : '';
     // let response = await fetch(constants.API_BASE_URL + `/api/whatsapp/plan${queryParam}`, {
     //   method: 'GET',
@@ -1619,7 +1619,7 @@ const WhatsAppAPI = {
 
 
   async getPlansById(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/plan/" + id, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1641,7 +1641,7 @@ const WhatsAppAPI = {
 
 
   async insertPlanRecord(reqbody) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/plan", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -1657,7 +1657,7 @@ const WhatsAppAPI = {
   },
 
   async updatePlanRecord(data) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/whatsapp/plan/" + data.plan_info.id, {
     //   method: "PUT",
     //   mode: "cors",
@@ -1674,7 +1674,7 @@ const WhatsAppAPI = {
   },
 
   async deletePlanRecord(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/whatsapp/plan/" + id,
     //   {
@@ -1693,7 +1693,7 @@ const WhatsAppAPI = {
 
 
   async fetchCompany(is_active = null) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     const queryParam = is_active ? `?is_active=${is_active}` : '';
     // let response = await fetch(constants.API_BASE_URL + `/api/company${queryParam}`, {
     //   method: 'GET',
@@ -1716,7 +1716,7 @@ const WhatsAppAPI = {
 
 
   async fetchSourceSchemas() {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/company/all/getschema", {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1744,7 +1744,7 @@ const WhatsAppAPI = {
     let files = [companyData.company_info.logourl];
     formData.append('files', files);
 
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/company", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -1761,7 +1761,7 @@ const WhatsAppAPI = {
 
 
   async findCompanyWithUser(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/company/detail/" + id, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1785,7 +1785,7 @@ const WhatsAppAPI = {
 
     formData.append('logo', companyData.company_info.logourl);
     formData.append('request', JSON.stringify(companyData));
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/company/updateCompanyWithUser", {
     //   method: "PUT",
     //   mode: "cors",
@@ -1803,7 +1803,7 @@ const WhatsAppAPI = {
 
 
   async getCompanyRecordsById(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/company/" + id, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1824,7 +1824,7 @@ const WhatsAppAPI = {
 
 
   async updateCompany(records) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/company/" + records.id, {
     //   method: "PUT",
     //   mode: "cors",
@@ -1842,7 +1842,7 @@ const WhatsAppAPI = {
 
 
   async getInvoicesRecord(status) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     const queryParam = status ? `?status=${status}` : '';
     // let response = await fetch(constants.API_BASE_URL + `/api/invoice${queryParam}`, {
     //   method: 'GET',
@@ -1864,7 +1864,7 @@ const WhatsAppAPI = {
 
 
   async fetchCompanyAndUserByInvoice(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/invoice/i/" + id, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1884,7 +1884,7 @@ const WhatsAppAPI = {
   },
 
   async getInvoicesByCompanyId(companyId) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/invoice/company/" + companyId, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1905,7 +1905,7 @@ const WhatsAppAPI = {
 
 
   async getInvoiceById(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/invoice/" + id, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -1927,7 +1927,7 @@ const WhatsAppAPI = {
 
 
   async updateInvoiceRecord(records) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/invoice/" + records.id, {
     //   method: "PUT",
     //   mode: "cors",
@@ -1946,7 +1946,7 @@ const WhatsAppAPI = {
 
 
   async addInvoiceWithTransaction(records) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/invoice/invoiceWithTransaction", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -1964,7 +1964,7 @@ const WhatsAppAPI = {
 
 
   async updateInvoiceAddTransaction(records) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/invoice/updateInvoiceAddTrans/" + records.id, {
     //   method: "PUT",
     //   mode: "cors",
@@ -1981,7 +1981,7 @@ const WhatsAppAPI = {
   },
 
   async duplicateEmailCheck(email, userId) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/company/emailcheck", {
     //   method: 'POST',
     //   mode: 'cors',
@@ -1998,7 +1998,7 @@ const WhatsAppAPI = {
 
 
   async getAllLeads() {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + `/api/publicleads`, {
     //   method: 'GET',
     //   mode: 'cors',
@@ -2019,7 +2019,7 @@ const WhatsAppAPI = {
 
 
   async createPublicLead(lead) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/publicleads",
     //   {
     //     method: 'POST',
@@ -2037,7 +2037,7 @@ const WhatsAppAPI = {
   },
 
   async updatePublicLead(lead) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/publicleads/" + lead.id,
     //   {
@@ -2056,7 +2056,7 @@ const WhatsAppAPI = {
   },
 
   async deletePublicLead(id) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(
     //   constants.API_BASE_URL + "/api/publicleads/" + id,
     //   {
@@ -2074,7 +2074,7 @@ const WhatsAppAPI = {
   },
 
   async sendInvoiceMail(imgData, invoiceData) {
-    // const token = localStorage.getItem("token");
+    // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/mail/invoice/", {
     //   method: 'POST',
     //   mode: 'cors',

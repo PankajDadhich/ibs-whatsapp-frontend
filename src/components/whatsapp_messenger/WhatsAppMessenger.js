@@ -27,7 +27,7 @@ const WhatsAppMessenger = ({ socket, selectedWhatsAppSetting }) => {
     const [filters, setFilters] = useState({ textName: '', cityName: '', date: '', recordType: 'lead' });
     const [receivedMessage, setReceivedMessage] = useState();
     const [showHideModal, setShowHideModal] = useState(false);
-    const [userInfo, setUserInfo] = useState(jwt_decode(localStorage.getItem('token')));
+    const [userInfo, setUserInfo] = useState(jwt_decode(sessionStorage.getItem('token')));
     const [bgColors, setBgColors] = useState(['#d3761f', '#00ad5b', '#debf31', '#239dd1', '#b67eb1', '#d3761f', '#de242f']);
     const [brokenImages, setBrokenImages] = useState([]);
     let colIndex = 0;

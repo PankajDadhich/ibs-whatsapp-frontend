@@ -21,7 +21,7 @@ const EditProfile = ({ userId }) => {
     const [body, setBody] = useState();
   const [user, setUser] = useState({ password: '', confirmpassword: '' });
   const [selectedFiles, setSelectedFiles] = useState(null);
-  const { tenantcode } = jwt_decode(localStorage.getItem('token'));
+  const { tenantcode } = jwt_decode(sessionStorage.getItem('token'));
 
   const profileImg = `/public/${tenantcode}/users`;
   const [showPasswordModal, setShowPasswordModal] = useState(false);
@@ -104,7 +104,7 @@ if(result.errors){
 
       } else {
         result = await WhatsAppAPI.saveStaffMemberEditProfile(profile.id, selectedFiles, JSON.stringify(JSON.stringify(profile)));
-        localStorage.setItem('myimage', body);
+        sessionStorage.setItem('myimage', body);
         toast.success('Record saved successfully.');
       }
 
@@ -129,8 +129,8 @@ if(result.errors){
 
       if (result.success) {
         toast.success('Password updated successfully.');
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('user');
         window.location.href = '/login';
       }
     } catch (error) {

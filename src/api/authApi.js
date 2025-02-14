@@ -13,14 +13,14 @@ const authApi = {
 
     const result = await response.json();
     if (result.success) {
-      localStorage.setItem("token", result.authToken);
-      localStorage.setItem("r-t", result.refreshToken);
+      sessionStorage.setItem("token", result.authToken);
+      sessionStorage.setItem("r-t", result.refreshToken);
     }
     return result;
   },
 
   async fetchMyImage() {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     let response = await fetch(
       constants.API_BASE_URL + "/api/auth/myimage",
       {
@@ -42,7 +42,7 @@ const authApi = {
   },
 
   async fetchUserImage(userid) {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     let response = await fetch(
       constants.API_BASE_URL + "/api/auth/userimage/" + userid,
       {
@@ -60,9 +60,9 @@ const authApi = {
 
 
   async refreshToken() {
-    const refreshToken = localStorage.getItem("r-t");
+    const refreshToken = sessionStorage.getItem("r-t");
     if (!refreshToken) {
-      console.error("No refresh token found in localStorage.");
+      console.error("No refresh token found in sessionStorage.");
       return { success: false, error: "No refresh token available." };
     }
     try {
@@ -77,8 +77,8 @@ const authApi = {
       const result = await response.json();
   
       if (result.success) {
-        localStorage.setItem("token", result.authToken);
-        localStorage.setItem("r-t", result.refreshToken);
+        sessionStorage.setItem("token", result.authToken);
+        sessionStorage.setItem("r-t", result.refreshToken);
       } else {
         console.error("Failed to refresh token:", result.error);
       }
@@ -92,8 +92,8 @@ const authApi = {
 
 
   logout() {
-    localStorage.removeItem("token");
-    localStorage.removeItem("r-t");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("r-t");
     window.location.href = '/login';
   },
 

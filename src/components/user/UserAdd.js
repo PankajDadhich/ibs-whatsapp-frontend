@@ -44,7 +44,7 @@ const UserAdd = () => {
             setoption(temp);
 
         } else {
-            let userInfo = jwt_decode(localStorage.getItem('token'));
+            let userInfo = jwt_decode(sessionStorage.getItem('token'));
             let temp = {}
             temp.value = userInfo.id;
             temp.label = userInfo.username;

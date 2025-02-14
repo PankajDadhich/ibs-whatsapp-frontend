@@ -13,19 +13,19 @@ import WhatsAppAPI from '../../api/WhatsAppAPI';
 const Header = ({ socket, onWhatsAppSettingChange }) => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState({});
-  const { tenantcode } = jwt_decode(localStorage.getItem('token'));
+  const { tenantcode } = jwt_decode(sessionStorage.getItem('token'));
   const profileImage = `/public/${tenantcode}/users`;
 
   // const profileImage = '/user_images/users';
   const [brokenImages, setBrokenImages] = useState([]);
   const [whatsappSetting, setWhatsappSetting] = useState([]);
-  const [selectedSetting, setSelectedSetting] = useState(localStorage.getItem('selectedWhatsAppSetting') || '');
+  const [selectedSetting, setSelectedSetting] = useState(sessionStorage.getItem('selectedWhatsAppSetting') || '');
 
   useEffect(() => {
     fetchData();
-    if (!localStorage.getItem("token")) navigate("/login");
+    if (!sessionStorage.getItem("token")) navigate("/login");
     try {
-      setUserInfo(jwt_decode(localStorage.getItem('token')));
+      setUserInfo(jwt_decode(sessionStorage.getItem('token')));
     } catch (error) {
   //    console.log(error)
     }
@@ -40,14 +40,14 @@ const Header = ({ socket, onWhatsAppSettingChange }) => {
       const response = await WhatsAppAPI.getWhatsAppSettingRecord();
       if (response.success) {
     //    console.log("response",response);
-        const selectedWhatsAppSetting = localStorage.getItem('selectedWhatsAppSetting');
+        const selectedWhatsAppSetting = sessionStorage.getItem('selectedWhatsAppSetting');
         const initialSetting = response.record.find(record => 
             record.phone === selectedWhatsAppSetting
         ) 
             ? selectedWhatsAppSetting 
             : (() => {
                 const newPhone = response.record[0]?.phone;
-                localStorage.setItem('selectedWhatsAppSetting', newPhone);
+                sessionStorage.setItem('selectedWhatsAppSetting', newPhone);
                 return newPhone;
             })();
 
@@ -67,7 +67,7 @@ const Header = ({ socket, onWhatsAppSettingChange }) => {
   const handleSettingChange = (e) => {
     const selectedId = e.target.value;
     setSelectedSetting(selectedId);
-    localStorage.setItem('selectedWhatsAppSetting', selectedId); 
+    sessionStorage.setItem('selectedWhatsAppSetting', selectedId); 
     if (onWhatsAppSettingChange) {
       onWhatsAppSettingChange(selectedId);  
     }
@@ -147,7 +147,7 @@ const Header = ({ socket, onWhatsAppSettingChange }) => {
 
           )}
 
-            {localStorage.getItem("token") ? (
+            {sessionStorage.getItem("token") ? (
               <Button variant="btn btn-primary" onClick={logout} title="Logout">
                 <i className="fa-solid fa-right-from-bracket"></i>
               </Button>
