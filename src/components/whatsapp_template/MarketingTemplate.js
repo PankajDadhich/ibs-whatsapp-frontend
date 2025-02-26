@@ -4,7 +4,7 @@
  * @copyright   www.ibirdsservices.com
  */
 import React, { useEffect, useRef, useState } from 'react'
-import { Button, Card, Col, Container, Form, Image, Row, Table } from 'react-bootstrap'
+import { Button, Card, Col, Container, Form, Image, Row, Table, OverlayTrigger, Popover } from 'react-bootstrap'
 import WhatsAppAPI from '../../api/WhatsAppAPI';
 import { ToastContainer, toast } from 'react-toastify'; // npm i react-toastify --force
 import 'react-toastify/dist/ReactToastify.css';
@@ -274,11 +274,14 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
             } else {
                 result = await WhatsAppAPI.createMarketingTemplate(reqBody, selectedWhatsAppSetting);
             }
-
+            // if (result.error) {
+            //     const errorJson = result.error.split(' - ')[1];
+            //     const parsedError = JSON.parse(errorJson);
+            //     const errorMessage = parsedError.error.error_user_msg || parsedError.error.message;
+            //     toast.error(errorMessage);
+            // }
             if (result.error) {
-                const errorJson = result.error.split(' - ')[1];
-                const parsedError = JSON.parse(errorJson);
-                const errorMessage = parsedError.error.error_user_msg || parsedError.error.message;
+                const errorMessage = result.error.body || result.error.message || "An error occurred.";
                 toast.error(errorMessage);
             } else {
                 toast.success(rowData?.id ? 'Template updated successfully.' : 'Template created successfully.');
@@ -374,6 +377,7 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
         const startPosition = textarea.selectionStart;
         const endPosition = textarea.selectionEnd;
         if (character !== null) {
+            character = character.trim();  
             const selectedText = text.substring(startPosition, endPosition);
             const newText = text.substring(0, startPosition) + character + selectedText + character + text.substring(endPosition);
             // console.log('newText: ', newText);
@@ -437,6 +441,17 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
     };
 
     console.log('variables: ', variables, Object.values(variables));
+    const helpText = (
+        <ul>
+        <li>Variable parameters are missing or have mismatched curly braces. The correct format is \u007B\u007B1\u007D\u007D.</li>
+        <li>Variable parameters contain special characters such as #, $, or %.</li>
+        <li>Variable parameters are not sequential. For example, \u007B\u007B1\u007D\u007D, \u007B\u007B2\u007D\u007D, \u007B\u007B4\u007D\u007D, \u007B\u007B5\u007D\u007D are defined but \u007B\u007B3\u007D\u007D does not exist.</li>
+        <li>Template contains too many variable parameters relative to the message length. You need to decrease the number of variable parameters or increase the message length.</li>
+        <li>The message template cannot end with a parameter.</li>
+    </ul>
+    );
+
+
 
     return (
         <>
@@ -657,7 +672,7 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                                         <Col lg={12} sm={12} xs={12}>
                                             <Form.Group className='mx-3 mb-1'>
                                                 <Form.Label className="form-view-label" htmlFor="formBasicBody">
-                                                    Body <i className="fa-solid fa-circle-info mb-2" title="Use {{1}} to insert the recipient's name dynamically in the body. [( min length 25 characters.)]"></i>
+                                                    Body <i className="fa-solid fa-circle-info mb-2" title="min length 25 characters."></i>
                                                 </Form.Label>
                                                 <Form.Control
                                                     as="textarea"
@@ -677,6 +692,26 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                                                     <button className='format-text-btn' onClick={() => formatTextArea('~')} data-bs-toggle="tooltip" title="Strike-through"><i className="fa-solid fa-strikethrough"></i></button>
                                                     <button className='format-text-btn' onClick={() => formatTextArea('```')} data-bs-toggle="tooltip" title="Monospace"><i className="fa-solid fa-code"></i></button>
                                                     <button className='format-text-btn' onClick={() => formatTextArea(null)}><i className="fa-solid fa-plus"></i> <span className='fw-bold ps-2'>Add variable</span></button>
+                                                    <OverlayTrigger
+                                                            placement="auto"
+                                                            overlay={
+                                                                <Popover id={`popover-positioned-auto`}>
+                                                                <Popover.Body>
+                                                              
+                                                                <ul>
+                                <li>Variable parameters are missing or have mismatched curly braces. The correct format is &#123;&#123;1&#125;&#125;.</li>
+                                <li>Variable parameters should not contain special characters such as #, $, or %.</li>
+                                <li>Variable parameters are not sequential. For example, &#123;&#123;1&#125;&#125;, &#123;&#123;2&#125;&#125;, &#123;&#123;4&#125;&#125;, &#123;&#123;5&#125;&#125; are defined but &#123;&#123;3&#125;&#125; does not exist.</li>
+                                <li>Template contains too many variable parameters relative to the message length. You need to decrease the number of variable parameters or increase the message length.</li>
+                                <li>The message template cannot end with a parameter.</li>
+                            </ul>
+
+                                                            </Popover.Body>
+                                                            </Popover>
+                                                            }
+                                                            >
+                                                            <i className="fa-solid fa-circle-info text-secondary" style={{ cursor: "pointer" }}></i>
+                                                            </OverlayTrigger>
                                                 </Col>
 
                                                 <Col xs={12}>
@@ -767,13 +802,23 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                                                         <Col lg={3} sm={12} xs={12}>
                                                             <Form.Group className='mb-0'>
                                                                 <Form.Label className="form-view-label">Button Text</Form.Label>
-                                                                <Form.Control
+                                                                {/* <Form.Control
                                                                     type="text"
                                                                     value={button.text}
                                                                     onChange={(e) => handleButtonChange(index, 'text', e.target.value)}
                                                                     placeholder="Enter button text..."
                                                                     style={{ height: "36px" }}
+                                                                /> */}
+                                                                <Form.Control
+                                                                    required
+                                                                    type="tel"
+                                                                    pattern="[0-9]*"
+                                                                    value={button.phone_number}
+                                                                    onChange={(e) => handleButtonChange(index, 'phone_number', e.target.value.replace(/\D/g, ''))}  
+                                                                    placeholder="16467043595"
+                                                                    style={{ height: "36px" }}
                                                                 />
+
                                                             </Form.Group>
                                                         </Col>
                                                     )}

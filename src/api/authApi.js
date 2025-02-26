@@ -1,37 +1,45 @@
 import { useState } from 'react';
 import * as constants from '../constants/CONSTANT';
+import helper from "../components/common/helper";
 const authApi = {
   async login(credentials) {
-    let response = await fetch(constants.API_BASE_URL + "/api/auth/login", {
-      method: "POST",
-      mode: "cors",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(credentials),
-    });
+    try {
+          
+        let response = await fetch(constants.API_BASE_URL + "/api/auth/login", {
+          method: "POST",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        });
 
-    const result = await response.json();
-    if (result.success) {
-      sessionStorage.setItem("token", result.authToken);
-      sessionStorage.setItem("r-t", result.refreshToken);
-    }
-    return result;
+        const result = await response.json();
+        if (result.success) {
+          sessionStorage.setItem("token", result.authToken);
+          sessionStorage.setItem("r-t", result.refreshToken);
+        }
+        return result;
+      } catch (error) {
+      console.log("error", error);
+  }
   },
 
   async fetchMyImage() {
     const token = sessionStorage.getItem("token");
-    let response = await fetch(
-      constants.API_BASE_URL + "/api/auth/myimage",
-      {
-        method: "GET",
-        //mode: "cors",
+    // let response = await fetch(
+    //   constants.API_BASE_URL + "/api/auth/myimage",
+    //   {
+    //     method: "GET",
+    //     //mode: "cors",
 
-        headers: {
-          "Authorization": token
-        }
-      }
-    );
+    //     headers: {
+    //       "Authorization": token
+    //     }
+    //   }
+    // );
+    let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/auth/myimage", 'GET');
+    
     if (response.status === 200) {
       const fileBody = await response.blob();
       return fileBody;
@@ -43,17 +51,19 @@ const authApi = {
 
   async fetchUserImage(userid) {
     const token = sessionStorage.getItem("token");
-    let response = await fetch(
-      constants.API_BASE_URL + "/api/auth/userimage/" + userid,
-      {
-        method: "GET",
-        //mode: "cors",
+    // let response = await fetch(
+    //   constants.API_BASE_URL + "/api/auth/userimage/" + userid,
+    //   {
+    //     method: "GET",
+    //     //mode: "cors",
 
-        headers: {
-          "Authorization": token
-        }
-      }
-    );
+    //     headers: {
+    //       "Authorization": token
+    //     }
+    //   }
+    // );
+    let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/auth/userimage/" + userid, 'GET');
+   
     const fileBody = await response.blob();
     return fileBody;
   },
@@ -63,8 +73,9 @@ const authApi = {
     const refreshToken = sessionStorage.getItem("r-t");
     if (!refreshToken) {
       console.error("No refresh token found in sessionStorage.");
-      return { success: false, error: "No refresh token available." };
-    }
+      this.logout(); 
+      return;
+      }
     try {
       const response = await fetch(`${constants.API_BASE_URL}/api/auth/refresh`, {
         method: "POST",
@@ -85,8 +96,9 @@ const authApi = {
       return result;
     } catch (error) {
       console.error("Error refreshing token:", error);
-      return { success: false, error: "Failed to refresh token." };
-    }
+      this.logout();
+      return;
+      }
   },
   
 

@@ -159,7 +159,11 @@ const LeadEdit = () => {
         setSelectedCity(value.value);
 
     }
+    const handleTextOnlyChange = (e) => {
+        const value = e.target.value.replace(/[^A-Za-z ]/g, '');
+        setLead({ ...lead, [e.target.name]: value });
 
+    };
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === "email") {
@@ -173,7 +177,7 @@ const LeadEdit = () => {
                 setEmailError("");
             }
         }
-      
+
         if (name === "whatsapp_number") {
             if (value) {
                 if (!phoneRegex.test(value)) {
@@ -323,8 +327,7 @@ const LeadEdit = () => {
                                                 required={true}
                                                 placeholder="Enter First Name"
                                                 value={lead.firstname}
-                                                onChange={(e) => handleChange(e)}
-
+                                                onChange={(e) => handleTextOnlyChange(e)}
                                             />
                                             <Form.Control.Feedback type="invalid">
                                                 Please provide First Name.
@@ -347,7 +350,7 @@ const LeadEdit = () => {
                                                 name="lastname"
                                                 placeholder="Enter LastName"
                                                 value={lead.lastname}
-                                                onChange={(e) => handleChange(e)}
+                                                onChange={(e) => handleTextOnlyChange(e)}
                                             />
                                         </Form.Group>
                                     </Col>
@@ -355,14 +358,14 @@ const LeadEdit = () => {
                                     <Col lg={6} sm={12} xs={12}>
                                         <Form.Group className='ms-3'>
                                             <Form.Label className="form-view-label">
-                                                Phone
+                                            Whatsapp Number
                                             </Form.Label>
                                             <Form.Control
                                                 style={{ height: "36px" }}
                                                 type="text"
                                                 name="whatsapp_number"
                                                 required
-                                                placeholder="Enter Phone"
+                                                placeholder="Enter whatsapp number"
                                                 value={lead.whatsapp_number}
                                                 onChange={(e) => handleChange(e)}
                                                 isInvalid={!!phoneError}
@@ -420,7 +423,7 @@ const LeadEdit = () => {
 
                                 </Row>
                                 <Row className='mb-3'>
-                                <Col lg={6} sm={12} xs={12}>
+                                    <Col lg={6} sm={12} xs={12}>
                                         <Form.Group className="ms-3">
                                             <Form.Label
                                                 className="form-view-label"
@@ -463,7 +466,7 @@ const LeadEdit = () => {
                                     </Col>
                                 </Row>
                                 <Row className='mb-3'>
-                                    
+
 
                                     <Col lg={6} sm={12} xs={12}>
                                         <Form.Group className="ms-3">
@@ -517,7 +520,7 @@ const LeadEdit = () => {
 
                                 <Row className='mb-3'>
 
-                                   
+
 
                                     <Col lg={6} sm={12} xs={12}>
                                         <Form.Group className="ms-3">
@@ -590,7 +593,7 @@ const LeadEdit = () => {
 
                                 </Row>
                                 <Row className='mb-3'>
-                                   
+
                                     <Col lg={6} sm={12} xs={12}>
                                         <Form.Group className="ms-3">
                                             <Form.Label
@@ -621,7 +624,7 @@ const LeadEdit = () => {
                                         <Form.Group className="ms-3">
                                             <Form.Label
                                                 className="form-view-label"
-                                               
+
                                             >
                                                 Expected Amount (₹)
                                             </Form.Label>
@@ -666,7 +669,7 @@ const LeadEdit = () => {
                                         <Form.Group className="ms-3">
                                             <Form.Label
                                                 className="form-view-label"
-                                               
+
                                             >
                                                 Industry
                                             </Form.Label>
@@ -712,7 +715,7 @@ const LeadEdit = () => {
                                             </Form.Control.Feedback>
                                         </Form.Group>
                                     </Col>
-                                  
+
 
                                 </Row>
 
@@ -722,7 +725,7 @@ const LeadEdit = () => {
                                             <Form.Group className="ms-3">
                                                 <Form.Label
                                                     className="form-view-label"
-                                                   
+
                                                 >
                                                     Lost Reason
                                                 </Form.Label>
@@ -744,7 +747,7 @@ const LeadEdit = () => {
                                         <Form.Group className="ms-3">
                                             <Form.Label
                                                 className="form-view-label"
-                                               
+
                                             >
                                                 Description
                                             </Form.Label>
@@ -761,7 +764,7 @@ const LeadEdit = () => {
                                         </Form.Group>
                                     </Col>
 
-                                
+
                                 </Row>
 
                                 <Row lg={12} sm={12} xs={12} className="py-3 my-4 section-header">
@@ -793,7 +796,7 @@ const LeadEdit = () => {
                                         <Form.Group className="ms-3">
                                             <Form.Label
                                                 className="form-view-label"
-                                               
+
                                             >
                                                 City
                                             </Form.Label>
@@ -814,7 +817,7 @@ const LeadEdit = () => {
                                         <Form.Group className="ms-3">
                                             <Form.Label
                                                 className="form-view-label"
-                                               
+
                                             >
                                                 Street
                                             </Form.Label>
@@ -835,7 +838,7 @@ const LeadEdit = () => {
                                         <Form.Group className="ms-3">
                                             <Form.Label
                                                 className="form-view-label"
-                                               
+
                                             >
                                                 Country
                                             </Form.Label>
@@ -859,7 +862,7 @@ const LeadEdit = () => {
                                         <Form.Group className="ms-3">
                                             <Form.Label
                                                 className="form-view-label"
-                                               
+
                                             >
                                                 Zip / PostalCode
                                             </Form.Label>

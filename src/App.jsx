@@ -55,7 +55,7 @@ import Billing from "./components/Billing";
 // import RazorPay from "./components/rozerpay/RazorPay";
 
 
-const ENDPOINT = 'https://api.indicrm.io/' || 'http://localhost:4004';
+const ENDPOINT = 'https://sandbox.watconnect.com/swp' || 'http://localhost:4004';
 // const ENDPOINT = 'https://api.indicrm.io/';
 
 function App() {
@@ -103,38 +103,38 @@ function App() {
         // console.log('userInfouserInfouserInfouserInfouserInfo',userInfo)
         const perm = user?.permissions?.map((obj) => obj.name).join(';');
         setPermissions(perm);
-        let socket = io(ENDPOINT, {
-          path: '/ibs/socket.io',
-          transports: ['websocket'],
-          reconnection: true,
-          // reconnectionAttempts: 5,
-          // reconnectionDelay: 1000,
-        });
+        // let socket = io(ENDPOINT, {
+        //   path: '/ibs/socket.io',
+        //   transports: ['websocket'],
+        //   reconnection: true,
+        //   // reconnectionAttempts: 5,
+        //   // reconnectionDelay: 1000,
+        // });
 
-        socket.on("connect", () => {
-          console.log('Socket connected:', socket.id);
-          socket.emit("setup", user);
-          setConnectedSocket(socket);
-        });
+        // socket.on("connect", () => {
+        //   console.log('Socket connected:', socket.id);
+        //   socket.emit("setup", user);
+        //   setConnectedSocket(socket);
+        // });
 
-        socket.on("connected", () => {
-          console.log('Socket setup complete');
-        });
+        // socket.on("connected", () => {
+        //   console.log('Socket setup complete');
+        // });
 
-        socket.on("receivedwhatsappmessage", (item) => {
-          console.log('#Received WhatsApp item:', item);
-          console.log('##socket', socket)
-        });
+        // socket.on("receivedwhatsappmessage", (item) => {
+        //   console.log('#Received WhatsApp item:', item);
+        //   console.log('##socket', socket)
+        // });
 
-        socket.on("disconnect", (reason) => {
-          console.log('Socket disconnected:', reason);
-        });
+        // socket.on("disconnect", (reason) => {
+        //   console.log('Socket disconnected:', reason);
+        // });
 
-        socket.on("connect_error", (err) => {
-          console.error('Connection error:', err);
-        });
+        // socket.on("connect_error", (err) => {
+        //   console.error('Connection error:', err);
+        // });
 
-        setConnectedSocket(socket);
+        // setConnectedSocket(socket);
 
         return () => {
           if (connectedSocket) {
@@ -201,7 +201,7 @@ function App() {
             <Route path="/web_leads" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="web_leads"
               />
             }>
@@ -214,7 +214,7 @@ function App() {
             <Route path="/campaign" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="campaign"
               />
             }>
@@ -228,7 +228,7 @@ function App() {
             <Route path="/whatsapp_template" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="whatsapp_template"
               />
             }>
@@ -239,7 +239,7 @@ function App() {
             <Route path="/whatsapp_messenger" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="whatsapp_messenger"
               />
             }>
@@ -248,7 +248,7 @@ function App() {
             <Route path="/whatsapp_setting" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="whatsapp_setting"
               />
             }>
@@ -257,7 +257,7 @@ function App() {
             <Route path="/response_message" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="response_message"
               />
             }>
@@ -266,7 +266,7 @@ function App() {
             <Route path="/plan" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="plan"
               />
             }>
@@ -278,7 +278,7 @@ function App() {
             <Route path="/module" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="module"
               />
             }>
@@ -288,7 +288,7 @@ function App() {
             <Route path="/leads" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="leads"
               />
             }>
@@ -301,7 +301,7 @@ function App() {
             <Route path="/groups" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="groups"
               />
             }>
@@ -312,7 +312,7 @@ function App() {
             <Route path="/company" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="company"
               />
             }>
@@ -325,7 +325,7 @@ function App() {
             <Route path="/invoice" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="invoice"
               />
             }>
@@ -337,7 +337,7 @@ function App() {
             <Route path="/billing" element={
               <ProtectedRoute
                 userInfo={userInfo}
-                userModules={userInfo.modules}
+                userModules={userInfo?.modules}
                 routeModule="billing"
               />
             }>
@@ -346,7 +346,7 @@ function App() {
             {/* <Route path="/razorpay" element={
                 <ProtectedRoute
                   userInfo={userInfo}
-                  userModules={userInfo.modules}
+                  userModules={userInfo?.modules}
                   routeModule="razorpay"
                 />
               }>

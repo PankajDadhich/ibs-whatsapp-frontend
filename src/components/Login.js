@@ -20,7 +20,9 @@ const Login = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    try {
+      
+    
     if (credentials.email && credentials.password && credentials.tcode) {
       const result = await authApi.login(credentials);
 
@@ -52,6 +54,10 @@ const Login = () => {
         setErrorMessage(result.errors);
       }
     }
+  } catch (error) {
+      console.log(error)
+  }
+
   };
 
   const handleChange = (e) => {

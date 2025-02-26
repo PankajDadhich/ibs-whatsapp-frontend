@@ -21,23 +21,58 @@ const Billing = ({ selectedWhatsAppSetting }) => {
   const [showCalendar, setShowCalendar] = useState(false);
   const calendarRef = useRef(null);
 
+  // useEffect(() => {
+  //   setDateRange([
+  //     {
+  //       startDate: moment().startOf('month').format(),
+  //       endDate: moment().endOf('month').format(),
+  //       key: 'selection'
+  //     }
+  //   ]);
+  //   let firstdate = moments().tz("Asia/Kolkata").startOf('month').unix();
+  //   let lastdate = moments().tz("Asia/Kolkata").endOf('month').unix();
+  //   init(firstdate, lastdate);
+  //   setIsSpinner(false);
+  // }, [selectedWhatsAppSetting]);
+  
+  // async function init(start='', end='') {
+  //   const billData = await WhatsAppAPI.getBillingCostsBySetting(selectedWhatsAppSetting, start, end);
+  //   // console.log(billData);
+  //   if (billData.success) {
+  //     setBody(billData);
+  //     let body = fetchTableData(billData.result);
+  //     setBillBody(body);
+  //   } else {
+  //     setBody([]);
+  //     setBillBody(null);
+  //     toast.error(billData.error);  
+  //   }
+  //   setIsSpinner(true);
+  // }
+
   useEffect(() => {
-    setDateRange([
-      {
-        startDate: moment().startOf('month').format(),
-        endDate: moment().endOf('month').format(),
-        key: 'selection'
-      }
-    ]);
-    let firstdate = moments().tz("Asia/Kolkata").startOf('month').unix();
-    let lastdate = moments().tz("Asia/Kolkata").endOf('month').unix();
-    init(firstdate, lastdate);
-    setIsSpinner(false);
+    if (selectedWhatsAppSetting) { // Ensure selectedWhatsAppSetting is not empty or null
+      setDateRange([
+        {
+          startDate: moment().startOf('month').format(),
+          endDate: moment().endOf('month').format(),
+          key: 'selection'
+        }
+      ]);
+  
+      let firstdate = moment().tz("Asia/Kolkata").startOf('month').unix();
+      let lastdate = moment().tz("Asia/Kolkata").endOf('month').unix();
+      
+      init(firstdate, lastdate);
+      setIsSpinner(false);
+    }
   }, [selectedWhatsAppSetting]);
   
-  async function init(start='', end='') {
+  async function init(start = '', end = '') {
+    if (!selectedWhatsAppSetting) return; // Prevent API call if the value is empty
+  
     const billData = await WhatsAppAPI.getBillingCostsBySetting(selectedWhatsAppSetting, start, end);
-    // console.log(billData);
+  
     if (billData.success) {
       setBody(billData);
       let body = fetchTableData(billData.result);
@@ -45,10 +80,11 @@ const Billing = ({ selectedWhatsAppSetting }) => {
     } else {
       setBody([]);
       setBillBody(null);
-      toast.error(billData.error);  
+      toast.error(billData.error);
     }
     setIsSpinner(true);
   }
+  
 
   const fetchTableData = (data) => {
     let categoryData = {
@@ -94,6 +130,7 @@ const Billing = ({ selectedWhatsAppSetting }) => {
         title: "Free conversations",
         value: totalFree,
         badgeBg: 'danger',
+        helpText: "The number of messaging conversations on WhatsApp between your business and users that are free of charge. A conversation starts when the first business message is delivered and ends 24 hours later. The exception is free entry point conversations, which have a 72-hour period. For the purpose of this metric, a user is defined as the person or entity with whom the business is messaging.",
         // items: Object.entries(categoryData.free).sort().map(([label, value]) => ({ label: label === 'SERVICE' ? "FREE TIER" : label, value })),
         items: predefinedFreeLabels.map(label => ({ label: label.replaceAll("_", " - "), value: categoryData.free[label] })),
       },
@@ -101,6 +138,7 @@ const Billing = ({ selectedWhatsAppSetting }) => {
         title: "Paid conversations",
         value: totalPaid,
         badgeBg: 'info',
+        helpText: "The number of messaging conversations on WhatsApp between your business and accounts that are charged. A conversation includes all messages delivered within a 24-hour period.A conversation starts when the first business message is delivered and ends 24 hours later. The first message can be initiated by the business (marketing, utility or authentication) or a business reply within 24 hours of receiving a message from an account (service).For the purpose of this metric, a user is defined as the person or entity with whom the business is messaging.",
         // items: Object.entries(categoryData.paid).sort().map(([label, value]) => ({ label, value })),
         items: predefinedPaidLabels.map(label => ({ label: label.replaceAll("_", " - "), value: categoryData.paid[label] })),
       },
@@ -108,6 +146,7 @@ const Billing = ({ selectedWhatsAppSetting }) => {
         title: "Approximate charges",
         value: `₹ ${totalCharges.toFixed(2)}`,
         badgeBg: 'success',
+        helpText:"The approximate total charges for conversations on WhatsApp. These charges may differ from what's shown on your invoices due to variations in data processing.The charge for each paid conversation is determined by the rate assigned to the country or region of the WhatsApp account's phone number, and whether the conversation was initiated by the business (marketing, utility or authentication) or a business reply within 24 hours of receiving a message from an account (service). See Rates for specific pricing information.",
         // items: Object.entries(categoryData.charges).sort().map(([label, value]) => ({ label, value: `₹ ${value.toFixed(2)}` })),
         items: predefinedPaidLabels.map(label => ({ label: label.replaceAll("_", " - "), value: `₹ ${categoryData.charges[label].toFixed(2)}` })),
       },
@@ -288,7 +327,7 @@ const Billing = ({ selectedWhatsAppSetting }) => {
                     <Col key={index} md={6}>
                       <Card className="h-100 border-0 shadow-sm" style={{ borderRadius: '8px !important', border: '1px solid #dee2e6 !important' }}>
                         <Card.Header className="d-flex justify-content-between align-items-center bg-light" style={{ fontSize: "1.24rem" }}>
-                          <span className="fw-bold text-secondary">{card.title} <HelpTooltip helpText={card.helpText} /></span>
+                          <span className="fw-bold text-secondary">{card.title} {card?.helpText ? <HelpTooltip helpText={card.helpText} /> : ''}</span>
                           <Badge bg={card.badgeBg} pill>
                             {card.value}
                           </Badge>

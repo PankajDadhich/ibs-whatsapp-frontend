@@ -51,18 +51,38 @@ const Home = ({selectedWhatsAppSetting, userInfo}) => {
           //   WhatsAppAPI.getApprovedTemplates(selectedWhatsAppSetting),
           //   WhatsAppAPI.fetchAutoResponseCount(),
           // ]);
-          const [leads, campaigns, autoResponses, billingCosts] = await Promise.all([
+          // const [leads, campaigns, autoResponses, billingCosts] = await Promise.all([
+          //   WhatsAppAPI.fetchLeadCount(),
+          //   WhatsAppAPI.fetchCampaignStatusCounts(selectedWhatsAppSetting),
+          //   WhatsAppAPI.fetchAutoResponseCount(),
+          //   WhatsAppAPI.getBillingCostsBySetting(selectedWhatsAppSetting, firstdate, lastdate),
+          // ]);
+
+          const requests = [
             WhatsAppAPI.fetchLeadCount(),
             WhatsAppAPI.fetchCampaignStatusCounts(selectedWhatsAppSetting),
             WhatsAppAPI.fetchAutoResponseCount(),
-            WhatsAppAPI.getBillingCostsBySetting(selectedWhatsAppSetting, firstdate, lastdate),
-          ]);
+        ];
+
+        if (selectedWhatsAppSetting) {
+            requests.push(
+                WhatsAppAPI.getBillingCostsBySetting(selectedWhatsAppSetting, firstdate, lastdate)
+            );
+        }
+
+        const [leads, campaigns, autoResponses, billingCosts] = await Promise.all(requests);
+
   
           leadCount = leads.total || 0;
           campaignCount = campaigns.result?.Pending || 0;
           // templateCount = templates?.data?.length || 0;
           autoResponseCount = autoResponses.total || 0;
-          billingCosts?.result?.map((data)=> billingCost += data.cost || 0);
+          if (billingCosts) {
+            billingCosts?.result?.forEach((data) => (billingCost += data.cost || 0));
+        }
+
+
+          // billingCosts?.result?.map((data)=> billingCost += data.cost || 0);
           console.log("billingCosts",billingCosts);
         }
       } catch (error) {

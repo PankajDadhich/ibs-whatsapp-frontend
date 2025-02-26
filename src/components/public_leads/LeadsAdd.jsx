@@ -275,6 +275,12 @@ const LeadsAdd = () => {
   }));
 };
 
+const handleTextOnlyChange = (e) => {
+  const { name } = e.target;
+const value = e.target.value.replace(/[^A-Za-z ]/g, '');
+handleChange({target:{name:name,value:value}})
+};
+
 
   const isFormValid = (() => {
     const { first_name, last_name, mobile_no, status, email, invoice, company } = lead;
@@ -348,7 +354,8 @@ const LeadsAdd = () => {
                         required={true}
                         placeholder="Enter First Name"
                         value={lead.first_name}
-                        onChange={(e) => handleChange(e)}
+                        onChange={handleTextOnlyChange}
+
                       />
                       <Form.Control.Feedback type="invalid">
                         Please provide First Name.
@@ -370,7 +377,8 @@ const LeadsAdd = () => {
                         name="last_name"
                         placeholder="Enter LastName"
                         value={lead.last_name}
-                        onChange={(e) => handleChange(e)}
+                        onChange={handleTextOnlyChange}
+
                       />
                     </Form.Group>
                   </Col>

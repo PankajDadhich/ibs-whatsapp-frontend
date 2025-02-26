@@ -14,7 +14,7 @@ const WhatsAppAPI = {
   },
 
   //.............. Fetch Lead By Id .............................
-  async fetchUserById(id) {
+  async fetchUserById(id, tenant) {
     id = id.trim();
     // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/auth/users/" + id, {
@@ -26,8 +26,9 @@ const WhatsAppAPI = {
     //     // 'Content-Type': 'application/x-www-form-urlencoded',
     //   }
     // });
+    let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/auth/users/" + id + "/" + tenant, 'GET');
 
-    let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/auth/users/" + id, 'GET');
+    // let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/auth/users/" + id, 'GET');
     const result = await response.json();
     return result;
   },
@@ -1313,6 +1314,11 @@ const WhatsAppAPI = {
     let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/leads", 'POST', JSON.stringify(lead));
     return await response.json();
   },
+  
+  async importLeads(lead) {
+    let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/leads/import", 'POST', JSON.stringify(lead));
+    return await response.json();
+  },
 
   async updateLead(lead) {
     // const token = sessionStorage.getItem("token");
@@ -1980,7 +1986,7 @@ const WhatsAppAPI = {
     return await response.json();
   },
 
-  async duplicateEmailCheck(email, userId) {
+  async duplicateEmailCheck(email, id) {
     // const token = sessionStorage.getItem("token");
     // let response = await fetch(constants.API_BASE_URL + "/api/company/emailcheck", {
     //   method: 'POST',
@@ -1989,10 +1995,10 @@ const WhatsAppAPI = {
     //     'Content-Type': 'application/json',
     //     'Authorization': token,
     //   },
-    //   body: JSON.stringify({ email, userId }),
+    //   body: JSON.stringify({ email, id }),
     // });
 
-    let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/company/emailcheck", 'POST', JSON.stringify({ email, userId }));
+    let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/company/emailcheck", 'POST', JSON.stringify({ email, id }));
     return await response.json();
   },
 
@@ -2090,11 +2096,23 @@ const WhatsAppAPI = {
     return await response.json();
   },
 
+  async getSetting(name) {
+    let response = await helper.fetchWithAuth(constants.API_BASE_URL + `/api/whatsapp/common/setting/` + name, 'GET');
+    const result = await response.json();
+    return result;
+  },
+
   async getBillingCostsBySetting(selectedWhatsAppSetting, start, end) {
     let response = await helper.fetchWithAuth(`${constants.API_BASE_URL}/api/whatsapp_setting/billing-cost/${selectedWhatsAppSetting}/${start}/${end}`, 'GET');
     // console.log('resp: ', await response.json())
     return await response.json();
   },
+
+  async insertCampaignParamsRecords(reqbody) {
+    let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/whatsapp/campaign/params", 'POST', JSON.stringify(reqbody));
+    return await response.json();
+  },
+
 
 }
 

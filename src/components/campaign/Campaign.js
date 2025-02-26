@@ -109,7 +109,7 @@ const Campaign = ({selectedWhatsAppSetting}) => {
                         </Button>
                     }
                     <Button className='btn-sm' variant='' onClick={() => downloadFile(row)}>
-                        <i className="fa-solid fa-cloud-arrow-down" title='download file'
+                        <i className="fa-solid fa-cloud-arrow-down" title='Download'
                             style={{ fontSize: "20px", color: "rgb(64 119 237)" }}
                         ></i>
                     </Button>

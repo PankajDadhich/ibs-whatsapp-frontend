@@ -7,7 +7,7 @@ import WhatsAppAPI from "../../api/WhatsAppAPI";
 import moment from "moment";
 import WhatsAppChat from "../whatsapp_messenger/WhatsAppChat";
 
-const LeadView = ({ socket, selectedWhatsAppSetting }) => {
+const LeadView = ({ socket,selectedWhatsAppSetting }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [lead, setLead] = useState(location.state ? location.state : {});
@@ -43,37 +43,43 @@ const LeadView = ({ socket, selectedWhatsAppSetting }) => {
     }
   };
 
-  const handleBack = () => {
-    navigate("/leads");
+  const editLead = (lead) => {
+    navigate(`/leads/${lead.id}/e`, { state: lead });
   };
 
+
+  const handleBack = () => {
+    navigate("/leads");
+  }
+
+ 
+
   return (
+
     <>
-      <Container className="mt-5">
-        <Row className="mx-5 section-header">
-          <Col lg={12} sm={12} xs={12}>
-            <Row className="view-form-header align-items-center">
+      <Container className='mt-5'>
+        <Row className='mx-5 section-header'>
+          <Col lg={12} sm={12} xs={12} >
+            <Row className='view-form-header align-items-center'>
               <Col lg={8} sm={8} xs={8} className="text-capitalize">
                 Lead
-                <h5>
-                  {lead.salutation ? lead.salutation + " " : ""}
+                <h5>{lead.salutation ? lead.salutation + " " : ''}
                   {lead.firstname ? lead.firstname + " " : <>&nbsp;</>}
-                  {lead.lastname ? lead.lastname : <>&nbsp;</>}
-                </h5>
+                  {lead.lastname ? lead.lastname : <>&nbsp;</>}</h5>
               </Col>
-              <Col lg={4} sm={4} xs={4} className="text-end">
-                <Button
-                  className="mx-2 btn-sm"
-                  variant="outline-light"
-                  onClick={handleBack}
-                >
+              <Col lg={4} sm={4} xs={4} className="text-end"  >
+                <Button className='mx-2 btn-sm' variant="outline-light" onClick={handleBack} >
                   Back
                 </Button>
                 <Button
-                  className="btn-sm mx-2"
-                  variant="danger"
-                  onClick={() => setModalShow(true)}
+                  className="mx-2 btn-sm"
+                  variant="light"
+                  onClick={()=>editLead(lead)}
                 >
+                  Edit
+                </Button>
+
+                <Button className="btn-sm mx-2" variant="danger" onClick={() => setModalShow(true)}>
                   Delete
                 </Button>
               </Col>
@@ -81,14 +87,14 @@ const LeadView = ({ socket, selectedWhatsAppSetting }) => {
           </Col>
         </Row>
       </Container>
-      <Container className="mt-1">
-        <Row className="mx-5 view-form">
-          <Col lg={12} sm={12} xs={12}>
+      <Container className='mt-1'>
+        <Row className='mx-5 view-form'>
+          <Col lg={12} sm={12} xs={12} >
             <Row className="py-2 ibs-edit-form">
               <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>Lead Name</label>
                 <span className="text-capitalize">
-                  {lead.salutation ? lead.salutation + " " : ""}
+                  {lead.salutation ? lead.salutation + " " : ''}
                   {lead.firstname ? lead.firstname + " " : <>&nbsp;</>}
                   {lead.lastname ? lead.lastname : <>&nbsp;</>}
                 </span>
@@ -98,11 +104,8 @@ const LeadView = ({ socket, selectedWhatsAppSetting }) => {
                 <span>{lead.phone ? lead.phone : <>&nbsp;</>}</span>
               </Col> */}
               <Col lg={6} sm={6} xs={6} className="mb-2">
-                <label>Phone</label>
-                <span>
-                  {" "}
-                  {lead.whatsapp_number ? lead?.whatsapp_number : <>&nbsp;</>}
-                </span>
+                <label>Whatsapp Number</label>
+                <span> {lead.whatsapp_number ? lead?.whatsapp_number : <>&nbsp;</>}</span>
               </Col>
               <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>Email</label>
@@ -119,19 +122,15 @@ const LeadView = ({ socket, selectedWhatsAppSetting }) => {
 
               <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>Expected Amount</label>
-                <span> {lead.amount ? "₹" + lead.amount : <>&nbsp;</>}</span>
+                <span> {lead.amount ? '₹' + lead.amount : <>&nbsp;</>}</span>
               </Col>
               <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>Payment Model</label>
-                <span>
-                  {lead.paymentmodel ? lead.paymentmodel : <>&nbsp;</>}
-                </span>
+                <span>{lead.paymentmodel ? lead.paymentmodel : <>&nbsp;</>}</span>
               </Col>
               <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>Payment Terms</label>
-                <span>
-                  {lead.paymentterms ? lead.paymentterms : <>&nbsp;</>}
-                </span>
+                <span>{lead.paymentterms ? lead.paymentterms : <>&nbsp;</>}</span>
               </Col>
               <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>Status</label>
@@ -146,17 +145,10 @@ const LeadView = ({ socket, selectedWhatsAppSetting }) => {
               <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>Assigned User</label>
                 <span>
-                  {lead.ownername ? (
-                    <Badge
-                      bg="warning"
-                      className="mx-2 px-2"
-                      style={{ display: "inline", color: "#000" }}
-                    >
+                  {lead.ownername ?
+                    <Badge bg="warning" className="mx-2 px-2" style={{ display: "inline", color: "#000" }} >
                       {lead.ownername}
-                    </Badge>
-                  ) : (
-                    <>&nbsp;</>
-                  )}
+                    </Badge> : <>&nbsp;</>}
                 </span>
               </Col>
               <Col lg={6} sm={6} xs={6} className="mb-2">
@@ -165,23 +157,11 @@ const LeadView = ({ socket, selectedWhatsAppSetting }) => {
               </Col>
               <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>Address</label>
-                <span>
-                  {lead.street ? lead.street : <>&nbsp;</>}{" "}
-                  {lead.city ? lead.city : <>&nbsp;</>}{" "}
-                  {lead.state ? lead.state : <>&nbsp;</>} &nbsp;
-                  {lead.country ? lead.country : <>&nbsp;</>}&nbsp;
-                  {lead.zipcode}
-                </span>
+                <span>{lead.street ? lead.street : <>&nbsp;</>}  {lead.city ? lead.city : <>&nbsp;</>} {lead.state ? lead.state : <>&nbsp;</>} &nbsp;{lead.country ? lead.country : <>&nbsp;</>}&nbsp;{lead.zipcode}</span>
               </Col>
               <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>Created Date</label>
-                <span>
-                  {lead.createddate ? (
-                    moment(lead.createddate).format("DD MMM, yyyy")
-                  ) : (
-                    <>&nbsp;</>
-                  )}
-                </span>
+                <span>{lead.createddate ? moment(lead.createddate).format("DD MMM, yyyy") : <>&nbsp;</>}</span>
               </Col>
             </Row>
           </Col>
@@ -189,18 +169,18 @@ const LeadView = ({ socket, selectedWhatsAppSetting }) => {
       </Container>
 
       {lead && lead.id && lead.whatsapp_number && (
-        <Container className="mb-5 mt-2">
-          <Row className="g-0 mx-5">
+      <Container className='mb-5 mt-2'>
+          <Row className='g-0 mx-5'>
             <Col lg={12} sm={12} xs={12} className="mb-4">
               <WhatsAppChat
                 userDetail={lead}
                 socket={socket}
-                selectedWhatsAppSetting={selectedWhatsAppSetting}
+                selectedWhatsAppSetting = {selectedWhatsAppSetting}
               />
             </Col>
           </Row>
         </Container>
-      )}
+         )}
       {modalShow && (
         <Confirm
           show={modalShow}
@@ -212,6 +192,7 @@ const LeadView = ({ socket, selectedWhatsAppSetting }) => {
         />
       )}
     </>
+
   );
 };
 export default LeadView;

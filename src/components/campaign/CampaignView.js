@@ -40,7 +40,7 @@ const CampaignView = () => {
         { title: "Name", prop: "name", isFilterable: true, },
         { title: "Phone", prop: "number", isFilterable: true },
         { title: "Status", prop: "status", isFilterable: true },
-        // { title: "Message", prop: "message", isFilterable: true },
+        { title: "Message", prop: "message", isFilterable: true },
     ];
 
     const handleDownload = () => {
@@ -141,8 +141,9 @@ const CampaignView = () => {
                     </Col>
                 </Row >
             </Container >
-
-            <Container className='mt-2'>
+            {body?.length>0 &&
+            <>
+              <Container className='mt-2'>
                 <Row className='g-0 mx-5'>
                     <Col lg={12} className="section-header">
                         <span className='mx-2'>Message History</span>
@@ -194,7 +195,10 @@ const CampaignView = () => {
                     </Col>
                 </Row>
             </Container>
+            </>
 
+}
+          
             <ToastContainer />
         </>
     )

@@ -192,7 +192,7 @@ const AuthenticationTemplate = ({ previewData, selectedWhatsAppSetting }) => {
         <>
             {!isSpinner ? <>
 
-                <Container className='mt-1'>
+                <Container className='mt-1 mb-2'>
                     <Row className='mx-5 g-0'>
                         <Col lg={12} sm={12} xs={12}>
                             <Card className='h-100' style={{ border: "none" }}>
@@ -347,7 +347,7 @@ const AuthenticationTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                                         </Col>
                                     </Row>
 
-                                    <Row className='g-0 mb-2'>
+                                    <Row className='g-0 mb-5'>
                                         <Col lg={12} sm={12} xs={12} className="text-end mt-2">
                                             <Button className='mx-2' variant="light" onClick={handleBack} disabled={isSending}>
                                                 Back

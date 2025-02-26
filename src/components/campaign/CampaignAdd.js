@@ -15,12 +15,14 @@ import { useNavigate } from "react-router-dom";
 // import Select from 'react-select'; // Import react-select
 import { MultiSelect } from "react-multi-select-component"; // Import the MultiSelect component
 import { saveAs } from "file-saver";
+import CampaignTemplateModal from "./CampaignTemplateModal";
 
 const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("");
   const [filteredTemplates, setFilteredTemplates] = useState([]);
   const [allTemplateData, setAllTemplateData] = useState([]);
+  const [show, setshow] = useState(false);
   const [selectedTemplateName, setSelectedTemplateName] = useState("");
   const [campaignRecord, setCampaignRecord] = useState({
     name: "",
@@ -32,19 +34,22 @@ const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isSpinner, setIsSpinner] = useState(false);
+  const [tamplateparms, setTamplateParms] = useState({});
   const fileInputRef = useRef(null);
   // const [selectedGroup, setSelectedGroup] = useState({ value: null, label: 'Select Group' }); // Changed to null
   const [optionGroups, setOptionGroups] = useState([]);
   const [selectedGroups, setSelectedGroups] = useState([]);
-  const hasGroupsModule = userInfo.modules.some(
-    (module) => module.url === "groups"
-  );
+  const hasGroupsModule = userInfo?.modules?.some(module => module.url === "groups") || false;
   const categories = ["UTILITY", "MARKETING"];
   useEffect(() => {
     fetchAllTemplate(selectedWhatsAppSetting);
     fetchGroupRecords();
   }, [selectedWhatsAppSetting]);
-
+  const handleclose = () => {
+    setshow(false)
+    setSelectedTemplateName("")
+    setTamplateParms({})
+  }
   const handleCategoryChange = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
@@ -151,6 +156,7 @@ const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
       toast.error("Failed to fetch templates.");
     }
   };
+console.log("tamplateparms ->",tamplateparms);
 
   const fetchGroupRecords = async () => {
     const result = await WhatsAppAPI.fetchGroups(true);
@@ -290,8 +296,8 @@ const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
       name: campaignRecord.name,
       type: campaignRecord.type || "Web",
       status: "Pending",
-      template_name: selectedTemplateName.name, //selectedTemplate,
-      template_id: selectedTemplateName.id, //selectedTemplate,
+      template_name: selectedTemplateName.name,
+      template_id: selectedTemplateName.id, 
       group_ids: groupIds,
       business_number: selectedWhatsAppSetting,
       startDate: campaignRecord.start_date
@@ -317,6 +323,25 @@ const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
 
       if (campaignResult.success) {
         const cpId = campaignResult.record.id;
+//TemplateParms
+
+if (tamplateparms && typeof tamplateparms === "object") {
+  const { sendToAdmin, file, file_id, whatsapp_number_admin, ...restParameters } = tamplateparms;
+  const campaign_template_params ={
+    "campaign_id":cpId,
+    "body_text_params":restParameters,
+    "msg_history_id":null,  
+    "file_id":file_id,
+    "whatsapp_number_admin":whatsapp_number_admin
+  }
+  const campaignparamsResult = await WhatsAppAPI.insertCampaignParamsRecords(
+    campaign_template_params
+  );
+  console.log("campaignparamsResult->",campaignparamsResult);
+  
+}
+
+        //hear for updation sumit
         let result = "";
         if (selectedFile) {
           result = await WhatsAppAPI.createCampaignFile(cpId, formData);
@@ -341,6 +366,7 @@ const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
     setCampaignRecord({ name: "", description: "", start_date: "", type: "" });
     setSelectedFile(null);
     setIsSending(false);
+    setSelectedGroups([])
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -374,6 +400,8 @@ const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
     const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
     saveAs(blob, "contacts.csv");
   };
+  console.log("setSelectedTemplateName",selectedTemplateName);
+  
   return (
     <>
       <Container className="mt-5">
@@ -444,7 +472,7 @@ const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
                         </Form.Group>
                       </Col>
                     </Row>
-                    <Row className="mb-3">
+                    {/*<Row className="mb-3">
                       <Col lg={6} sm={12} xs={12}>
                         <Form.Group className="mb-3 mx-2">
                           <Form.Label
@@ -488,60 +516,17 @@ const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
                             <option value="">Select Template Name</option>
                             {filteredTemplates?.map((template) => (
                               <option key={template.id} value={template.name}>
-                                {template.templatename}
+                                {  template?.message_body
+                                  ?.match(/\{\{(\d+)\}\}/g)?.length>0 ? `${template.templatename} {{-}} `:  template.templatename}
                               </option>
                             ))}
                           </Form.Select>
                         </Form.Group>
                       </Col>
-                    </Row>
+                    </Row>*/}
 
-                    <Row>
-                      <Col lg={6} sm={12} xs={12}>
-                        <Form.Group className="mb-3 mx-2" controlId="formFile">
-                          <Form.Label>File Upload</Form.Label>
-                          <Form.Control
-                            type="file"
-                            ref={fileInputRef}
-                            accept=".csv"
-                            onChange={handleFileChange}
-                          />
-                          {errorMessage && (
-                            <Form.Text className="text-danger">
-                              {errorMessage}
-                            </Form.Text>
-                          )}
-                        </Form.Group>
-                      </Col>
-                      <Col lg={6} sm={12} xs={12}>
-                        <Form.Group className="mb-3 mx-2">
-                          <Form.Label htmlFor="formType">Type</Form.Label>
-                          <Form.Select
-                            style={{ height: "36px" }}
-                            aria-label="select type"
-                            name="type"
-                            value={campaignRecord?.type}
-                            onChange={handleChangeName}
-                          >
-                            <option value="">Select type</option>
-                            <option value="Advertisement">Advertisement</option>
-                            <option value="Banner Ads">Banner Ads</option>
-                            <option value="Conference">Conference</option>
-                            <option value="Direct Mail">Direct Mail</option>
-                            <option value="Email">Email</option>
-                            <option value="Partners">Partners</option>
-                            <option value="Public Relations">
-                              Public Relations
-                            </option>
-                            <option value="Web">Web</option>
-                            <option value="Other">Other</option>
-                          </Form.Select>
-                        </Form.Group>
-                      </Col>
-                    </Row>
-
-                    <Row className="mb-3">
-                      {hasGroupsModule && (
+<Row className="align-items-center">
+{hasGroupsModule && (
                         <Col lg={6} sm={12} xs={12}>
                           <Form.Group
                             className="mb-3 mx-2"
@@ -557,6 +542,59 @@ const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
                           </Form.Group>
                         </Col>
                       )}
+ 
+
+  <Col lg={6} sm={12} xs={12}>
+    <Form.Group className="mb-3 mx-2" controlId="formFile">
+      <Form.Label>File Upload</Form.Label>
+      <Form.Control
+        type="file"
+        ref={fileInputRef}
+        accept=".csv"
+        onChange={handleFileChange}
+      />
+      {errorMessage && (
+        <Form.Text className="text-danger">{errorMessage}</Form.Text>
+      )}
+    </Form.Group>
+  </Col>
+
+  <Col lg={6} sm={12} xs={12}>
+    <Form.Group className="mb-3 mx-2">
+      <Form.Label htmlFor="formType">Type</Form.Label>
+      <Form.Select
+        className="w-100"
+        style={{ height: "36px" }}
+        aria-label="select type"
+        name="type"
+        value={campaignRecord?.type}
+        onChange={handleChangeName}
+      >
+        <option value="">Select type</option>
+        <option value="Advertisement">Advertisement</option>
+        <option value="Banner Ads">Banner Ads</option>
+        <option value="Conference">Conference</option>
+        <option value="Direct Mail">Direct Mail</option>
+        <option value="Email">Email</option>
+        <option value="Partners">Partners</option>
+        <option value="Public Relations">Public Relations</option>
+        <option value="Web">Web</option>
+        <option value="Other">Other</option>
+      </Form.Select>
+    </Form.Group>
+  </Col>
+  <Col lg={6} sm={12} xs={12}>
+    <Form.Group className="mb-3 mx-2">
+      <Form.Label htmlFor="formType">Template</Form.Label><br/>
+      <Button className="w-50" onClick={() => setshow(true)} 
+                          variant="outline-secondary">Select Template</Button>  <span>{selectedTemplateName?.name}</span>
+    </Form.Group>
+  </Col>
+</Row>
+
+
+                    <Row className="mb-3">
+                     
                       <Col lg={6} sm={12} xs={12}>
                         <Form.Group
                           className="mb-3 mx-2"
@@ -625,6 +663,16 @@ const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
                 </Card>
               </Col>
             </Row>
+            {show &&
+             <CampaignTemplateModal  show={show}
+             onHide={handleclose}   
+             setshow={setshow}   
+             setSelectedTemplateName={setSelectedTemplateName}  
+             selectedTemplateName={selectedTemplateName}       
+             setTemplateParms={setTamplateParms}
+             tamplateparms={tamplateparms}
+             selectedWhatsAppSetting={selectedWhatsAppSetting}/>
+            }
           </Container>
         </>
       ) : (

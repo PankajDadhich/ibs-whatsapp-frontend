@@ -35,29 +35,30 @@ export const JPG = "jpg";
 export const JPEG = "jpeg";
 
 // export const LEAD_STATUS_VALUES = [{label : 'Open - Not Contacted', islast : false}, {label : 'Working Contacted', islast : false} , {label : 'Closed - Converted', islast : true}, {label : 'Closed - Not Converted', islast : true}];
-export const LEAD_STATUS_VALUES = [
-  {
-    label: "Open - Not Contacted",
-    sortorder: 1,
-    is_converted: false,
-    is_lost: false,
-  },
-  {
-    label: "Working - Contacted",
-    sortorder: 2,
-    is_converted: false,
-    is_lost: false,
-  },
-  {
-    label: "Closed - Converted",
-    sortorder: 3,
-    is_converted: true,
-    is_lost: false,
-  },
-  {
-    label: "Closed - Not Converted",
-    sortorder: 4,
-    is_converted: false,
-    is_lost: true,
-  },
-];
+export const LEAD_STATUS_VALUES =
+    [
+        {
+            label: "Open - Not Contacted",
+            sortorder: 1,
+            is_converted: false,
+            is_lost: false,
+        },
+        {
+            label: "Working - Contacted",
+            sortorder: 2,
+            is_converted: false,
+            is_lost: false,
+        },
+        {
+            label: "Closed - Converted",
+            sortorder: 3,
+            is_converted: true,
+            is_lost: false,
+        },
+        {
+            label: "Closed - Not Converted",
+            sortorder: 4,
+            is_converted: false,
+            is_lost: true,
+        },
+    ];

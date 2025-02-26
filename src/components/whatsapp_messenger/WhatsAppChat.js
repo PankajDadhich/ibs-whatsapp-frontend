@@ -38,6 +38,7 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
 
     useEffect(() => {
        socket?.on("receivedwhatsappmessage", (data) => {
+        // console.log("daata",data);
             setReceivedMessage(data);
         })
         return () => {
@@ -124,7 +125,7 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                 if (result.error) {
                     toast.error(`Error: ${result.error}`);
                 } else {
-                    const messageId = result.messages[0].id;
+                    const messageId = result?.messages[0]?.id;
 
                     const newMessage = {
                         parent_id: userDetail.id || null,
@@ -206,18 +207,21 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                 .replace(/~(.*?)~/g, "<s>$1</s>")    // Strikethrough
                 .replace(/```(.*?)```/gs, "<pre>$1</pre>") // Code Block
                 .replace(/\n+/g, "<br />");  // Line Breaks
-        
             try {
-                const replacements = JSON.parse(exampleBodyText || '{}');
-                Object.keys(replacements).forEach((key) => {
-                    formattedMessage = formattedMessage.replace(`{{${key}}}`, replacements[key]);
-                });
+                if (exampleBodyText && exampleBodyText.trim().startsWith("{")) {
+                    const replacements = JSON.parse(exampleBodyText);
+        
+                    formattedMessage = formattedMessage.replace(/{{(\d+)}}/g, (_, index) => {
+                        return replacements[index] || `{{${index}}}`; // Replace with value or keep placeholder
+                    });
+                }
             } catch (error) {
                 console.error("Error parsing example_body_text", error);
             }
         
             return <span dangerouslySetInnerHTML={{ __html: formattedMessage }} />;
         };
+        
         
 
         if (googleMapsUrlMatch) {
@@ -313,6 +317,7 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                                 style={{ width: '100%', height: '200px', objectFit: 'contain', maxWidth: '100%', maxHeight: '200px' }}
                             />
                         </a>
+                       <br/>  {msg?.description}
                     </div>
                 );
             case 'pdf':

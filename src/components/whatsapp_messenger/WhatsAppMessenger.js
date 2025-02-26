@@ -24,7 +24,7 @@ const WhatsAppMessenger = ({ socket, selectedWhatsAppSetting }) => {
     const [body, setBody] = useState([]);
     const [showHide, setShowHide] = useState(false);
     const [userData, setUserData] = useState();
-    const [filters, setFilters] = useState({ textName: '', cityName: '', date: '', recordType: 'lead' });
+    const [filters, setFilters] = useState({ textName: '', cityName: '', date: '', recordType: 'recentlyMessage' });
     const [receivedMessage, setReceivedMessage] = useState();
     const [showHideModal, setShowHideModal] = useState(false);
     const [userInfo, setUserInfo] = useState(jwt_decode(sessionStorage.getItem('token')));
@@ -54,15 +54,17 @@ const WhatsAppMessenger = ({ socket, selectedWhatsAppSetting }) => {
         if (!filters.recordType) {
             setFilters((prevFilters) => ({
                 ...prevFilters,
-                recordType: userInfo.modules.some((module) => module.url === "leads") ? 'lead' : 'user',
+                recordType: userInfo?.modules?.some((module) => module.url === "leads") ? 'lead' : 'user',
             }));
         }
-    }, [filters, userInfo.modules]);
+    }, [filters, userInfo?.modules]);
 
 
     const fetchData = async () => {
         const { textName, cityName, recordType } = filters;
+        console.log("result",textName, cityName, recordType)
         let result = await WhatsAppAPI.getFilterData(textName, cityName, recordType);
+        console.log("result",result)
         if (result.success) {
             setBody(result.records);
         } else {
@@ -245,14 +247,16 @@ const WhatsAppMessenger = ({ socket, selectedWhatsAppSetting }) => {
                                                             aria-label="select name"
                                                             name="recordType"
                                                             onChange={handleChange}
+                                                            value={filters.recordType}
                                                         >
-                                                            {userInfo.modules.some((module) => module.url === "leads") && (
+                                                           {userInfo?.modules?.some((module) => module.url === "leads") && (
                                                                 <option value="lead">Lead</option>
                                                             )}
                                                             <option value="user">User</option>
-                                                            {userInfo.modules.some((module) => module.url === "groups") && (
+                                                            {userInfo?.modules?.some((module) => module.url === "groups") && (
                                                                 <option value="groups">Groups</option>
                                                             )}
+
                                                             <option value="recentlyMessage">Recently Message</option>
                                                         </Form.Select>
                                                     </Form.Group>

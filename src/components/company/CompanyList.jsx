@@ -79,7 +79,7 @@ const CompanyList = () => {
       },
   
       { title: "Tenant Code", prop: "tenantcode", isFilterable: true },
-      { title: "Email", prop: "email", isFilterable: true },
+      { title: "Email", prop: "adminemail", isFilterable: true },
       { 
         title: "Status", 
         prop: "company_active", 

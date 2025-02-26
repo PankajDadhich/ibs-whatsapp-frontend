@@ -227,6 +227,13 @@ const UserAdd = () => {
         setUser({ ...user, managerid: event.value, managername: event.label });
     }
 
+    const handleTextOnlyChange = (e) => {
+        const { name } = e.target;
+const value = e.target.value.replace(/[^A-Za-z ]/g, '');
+
+setUser({ ...user, [name]: value });
+
+};
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
@@ -264,7 +271,7 @@ const UserAdd = () => {
                                                 name="firstname"
                                                 placeholder="Enter first name"
                                                 value={user.firstname}
-                                                onChange={handleChange}
+                                               onChange={handleTextOnlyChange}
                                                 style={{ height: "36px" }}
 
                                             />
@@ -279,7 +286,7 @@ const UserAdd = () => {
                                                 name="lastname"
                                                 placeholder="Enter lastname"
                                                 value={user.lastname}
-                                                onChange={handleChange}
+                                               onChange={handleTextOnlyChange}
                                                 style={{ height: "36px" }}
 
                                             />
@@ -309,16 +316,13 @@ const UserAdd = () => {
                                     </Col>*/}
                                         <Col lg={6} sm={12} xs={12}>
                                         <Form.Group className="ms-3">
-                                            <Form.Label htmlFor="phone">Phone
-                                                <i className="fa-solid fa-circle-info ms-2"
-                                                    title="Changing your Phone number will require you to log out and log back in to refresh WhatsApp settings."
-                                                ></i>
+                                            <Form.Label htmlFor="phone">Whatsapp Number
                                             </Form.Label>
                                             <Form.Control
                                                 style={{ height: "36px" }}
                                                 type="text"
                                                 name="whatsapp_number"
-                                                placeholder="Enter Phone Number"
+                                                placeholder="Enter Whatsapp Number"
                                                 value={user.whatsapp_number}
                                                 onChange={handleChange}
                                             />
@@ -476,4 +480,4 @@ const UserAdd = () => {
     )
 }
 
-export default UserAdd
+export default UserAdd;

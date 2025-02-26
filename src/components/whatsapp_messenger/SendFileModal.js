@@ -164,7 +164,7 @@ const SendFileModal = (props) => {
                                     message_id:messageId
                                 }
 
-                                const response = await WhatsAppAPI.insertMsgHistoryRecords(newMessage);
+                                const responseHistory = await WhatsAppAPI.insertMsgHistoryRecords(newMessage);
 
                                 toast.success('File sent successfully!');
                                 props.refreshImageData();

@@ -96,7 +96,7 @@ const UserList = () => {
     { title: "Role", prop: "userrole", isFilterable: true },
     // { title: "Phone", prop: "phone", isFilterable: true },
     { title: "Email", prop: "email", isFilterable: true },
-    { title: "Phone", prop: "whatsapp_number", isFilterable: true },
+    { title: "Whatsapp Number", prop: "whatsapp_number", isFilterable: true },
     {
       title: "Active", prop: "isactive", isFilterable: true,
       cell: (row) => (
@@ -111,7 +111,7 @@ const UserList = () => {
             title: "Actions",
             prop: "id",
             cell: (row) => (
-              <Button className="btn-sm mx-2" onClick={() => editUser({ row })}>
+              <Button className="btn-sm mx-2" title="Edit" onClick={() => editUser({ row })}>
                 <i className="fa-regular fa-pen-to-square"></i>
               </Button>
             ),

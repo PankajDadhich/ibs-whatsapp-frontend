@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { Form, FormControl } from "react-bootstrap";
 
-const TemplatePreview = ({ template, onParametersChange }) => {
-  const [parameters, setParameters] = useState({});
+const TemplatePreview = ({ template, onParametersChange,tamplateparms,setParameters,parameters }) => {
+  //const [parameters, setParameters] = useState({});
   const [sendToAdmin, setSendToAdmin] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFileURL, setSelectedFileURL] = useState(null);
@@ -29,6 +30,37 @@ const TemplatePreview = ({ template, onParametersChange }) => {
         file: null
     });
 }, [template]);
+console.log(" tamplateparms=>",tamplateparms);
+//useEffect(() => {
+//  setParameters({});
+//
+//  if (tamplateparms && typeof tamplateparms === "object") {
+//    const { sendToAdmin, file, file_id, whatsapp_number_admin, ...restParameters } = tamplateparms;
+//
+//    setSendToAdmin(sendToAdmin);
+//    setSelectedFile(file);
+//    setParameters(restParameters);
+//  }
+//
+//}, [tamplateparms]);
+useEffect(() => {
+  //setParameters({});
+  
+  if (tamplateparms && typeof tamplateparms === "object") {
+    const { sendToAdmin, file, file_id, whatsapp_number_admin, ...restParameters } = tamplateparms;
+
+    setSendToAdmin(sendToAdmin);
+    setParameters(restParameters);
+    
+    if (file) {
+      setSelectedFile(file);
+      setSelectedFileType(file.type);
+      setSelectedFileURL(URL.createObjectURL(file));
+    }
+
+  }
+
+}, [tamplateparms]);
 
 
   if (!template) {
@@ -174,14 +206,28 @@ const TemplatePreview = ({ template, onParametersChange }) => {
       <div className="row">
         <div className="col-md-6">
           {/* File Upload Input */}
-          {template.header && template.header_body && template.header !== 'TEXT'  &&
+          {/*{template.header && template.header_body && template.header !== 'TEXT'  &&
             <div className="mb-3">
             <label className="form-label fw-bold">Upload File:</label>
             <input type="file" className="form-control border rounded" onChange={handleFileChange}  ref={fileInputRef} />
             {errorMessage && <div className="text-danger mt-2">{errorMessage}</div>}
           </div>
-          }
-        
+          }*/}
+        {template.header && template.header_body && template.header !== 'TEXT'  &&
+  <div className="mb-3">
+    <label className="form-label fw-bold">Upload File:</label>
+    <input type="file" className="form-control border rounded" onChange={handleFileChange} ref={fileInputRef} />
+    
+    {selectedFile && (
+      <div className="mt-2">        
+          <p className="text-muted">{selectedFile.name}</p>       
+      </div>
+    )}
+
+    {errorMessage && <div className="text-danger mt-2">{errorMessage}</div>}
+  </div>
+}
+
           
           {/* Parameters */}
           {template?.message_body?.match(/\{\{(\d+)\}\}/g)?.map((match, idx) => {
@@ -189,7 +235,18 @@ const TemplatePreview = ({ template, onParametersChange }) => {
             return (
               <div key={idx} className="mb-3">
                 <label className="form-label fw-bold">Enter value for {match}:</label>
-                <input type="text" value={parameters[paramIndex] || ""} onChange={(e) => handleInputChange(paramIndex, e.target.value)} className="form-control p-3 border rounded" placeholder={`Value for ${match}`} />
+                <Form.Group controlId={`formInput${paramIndex}`}>
+  <FormControl
+    type="text"
+    value={parameters[paramIndex] || ""}
+    required
+    onChange={(e) => handleInputChange(paramIndex, e.target.value)}
+    placeholder={`Value for ${match}`}
+    className="p-3"
+    aria-required="true"
+  />
+</Form.Group>
+                {/*<input type="text" value={parameters[paramIndex] || ""} onChange={(e) => handleInputChange(paramIndex, e.target.value)} className="form-control p-3 border rounded" placeholder={`Value for ${match}`} />*/}
               </div>
             );
           })}

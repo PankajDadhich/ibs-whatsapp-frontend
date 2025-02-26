@@ -51,11 +51,18 @@ const UserView = ({selectedWhatsAppSetting}) => {
     }
 
     async function inituser() {
-      let result = await WhatsAppAPI.fetchUserById(user.id);
+      // let result = await WhatsAppAPI.fetchUserById(user.id);
+      let result = await WhatsAppAPI.fetchUserById(user.id, user.tenantcode);
+      
       setUser(result);
     }
     inituser();
   };
+
+  const editUser = (row) => {
+    navigate(`/users/${row.user.id}/e`, { state: row.user });
+  }
+
 
   const handleChangeSubmit = async (e) => {
     e.preventDefault();
@@ -120,12 +127,18 @@ const UserView = ({selectedWhatsAppSetting}) => {
                 <h5>{user.firstname ? user.firstname : ''}&nbsp;{user.lastname ? user.lastname : ''}</h5>
               </Col>
               <Col lg={4} sm={4} xs={4} className="text-end"  >
-                <Button className='mx-2 btn-sm' variant="light" onClick={handleBack} >
+             
+                <Button className='mx-2 btn-sm' variant="outline-light" onClick={handleBack} >
                   Back
                 </Button>
+                <Button className='mx-2 btn-sm' variant="light" onClick={() => editUser({ user })} >
+                  Edit
+                </Button>
+
                 <Button className="btn btn-sm" variant="danger" onClick={handleShowPasswordModal}>
                   Reset Password
                 </Button>
+                
               </Col>
             </Row>
           </Col>
@@ -151,13 +164,13 @@ const UserView = ({selectedWhatsAppSetting}) => {
                 <label>Email</label>
                 <span>{user.email ? user.email : <>&nbsp;</>}</span>
               </Col>
-              {/*<Col lg={6} sm={6} xs={6} className="mb-2">
+              {/* <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>Phone</label>
                 <span>{user.phone ? user.phone : <>&nbsp;</>}</span>
-              </Col>*/}
+              </Col> */}
               <Col lg={6} sm={6} xs={6} className="mb-2">
-                <label>Phone</label>
-                <span>{user.whatsapp_number ? user.whatsapp_number.length===12?user.whatsapp_number.substring(2) :user.whatsapp_number : <>&nbsp;</>}</span>
+                <label>Whatsapp Number</label>
+                <span>{user.whatsapp_number ? user.whatsapp_number : <>&nbsp;</>}</span>
               </Col>
               <Col lg={6} sm={6} xs={6} className="mb-2">
                 <label>User Role</label>
@@ -188,7 +201,7 @@ const UserView = ({selectedWhatsAppSetting}) => {
             </Row>
           </Col>
         </Row>
-        <Card bg="light" text="light" className="mx-5 mt-4">
+        {/* <Card bg="light" text="light" className="mx-5 mt-4">
           <Card.Header className="d-flex card-header-grey justify-content-between">
             <Tabs defaultActiveKey="login history" id="uncontrolled-tab-example" onSelect={(key) => handleSelect(key)}>
               <Tab eventKey="login history" title="Login History"></Tab>
@@ -198,7 +211,7 @@ const UserView = ({selectedWhatsAppSetting}) => {
           <Card.Body>
             {user && user.id && locationHistorysTab && (<RelatedLocationHistory parent={user} />)}
           </Card.Body>
-        </Card>
+        </Card> */}
         <ToastContainer />
       </Container>
 

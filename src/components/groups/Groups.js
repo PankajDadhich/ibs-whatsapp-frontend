@@ -83,7 +83,7 @@ const Groups = () => {
             cell: (row) => (
                 <>
                     <Button
-                        className="btn-sm mx-2"
+                        className="btn-sm mx-2" title="Update status"
                         variant={row.status ? "success" : "danger"}
                         onClick={() => toggleStatusChangeModal(row.id, row.status)}
                     >

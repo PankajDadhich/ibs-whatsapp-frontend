@@ -24,7 +24,10 @@ const LeadView = () => {
     navigate("/web_leads");
   }
 
- 
+  const editLead = (lead) => {
+    navigate(`/web_leads/${lead.id}`, { state: lead });
+  };
+
 
   return (
 
@@ -43,6 +46,10 @@ const LeadView = () => {
                 <Button className='mx-2 btn-sm' variant="outline-light" onClick={handleBack} >
                   Back
                 </Button>
+                <Button className='mx-2 btn-sm' variant="light" onClick={() => editLead(lead)} >
+                  Edit
+                </Button>
+
                 <Button className="btn-sm mx-2" variant="danger" onClick={() => setModalShow(true)}>
                   Delete
                 </Button>

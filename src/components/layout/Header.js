@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Badge, Button, Form} from "react-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import authApi from "../../api/authApi";
 import jwt_decode from "jwt-decode";
 import { isMobile, } from 'react-device-detect';
@@ -106,30 +106,50 @@ const Header = ({ socket, onWhatsAppSettingChange }) => {
         <Navbar.Brand href="#home"></Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            <Nav.Link href="#" className="p-0 d-flex align-items-center" style={{ fontSize: ".9rem" }}>
-              {brokenImages.includes(`img-${userInfo.id}`) ? (
-                <NameInitialsAvatar
-                  size="30px"
-                  textSize="12px"
-                  bgColor='#49C858'
-                  borderWidth="0px"
-                  textColor="#fff"
-                  name={userInfo.username}
-                />
-              ) : (
-                <img alt=""
-                  style={{ height: "30px", width: "30px" }}
-                  src={profileImage + '/' + userInfo.id}
-                  className="rounded-circle"
-                  onError={() => setBrokenImages((prev) => [...prev, `img-${userInfo.id}`])}
-                  id={`img-${userInfo.id}`}
-                />
-              )}
-              <Badge style={{ fontSize: ".9rem" }} bg="light" text="dark" className="mx-2">{userInfo.username} </Badge>
-              <Badge bg="success" style={{ fontSize: ".9rem" }}>{userInfo.userrole} </Badge> </Nav.Link>
-            <Nav.Link href="#" className="d-flex p-0" style={{ alignItems: "center" }}><span className="mx-2" style={{ fontSize: ".9rem" }}>Company</span> <Badge style={{ fontSize: ".9rem" }} bg="secondary">{userInfo.companyname} </Badge> </Nav.Link>
-          </Nav>
+        <Nav className="me-auto">
+  <NavLink
+    to="/myprofile"
+    className="p-0 d-flex align-items-center"
+    style={{ fontSize: ".9rem", textDecoration: 'none' }} 
+  >
+    {brokenImages.includes(`img-${userInfo.id}`) ? (
+      <NameInitialsAvatar
+        size="30px"
+        textSize="12px"
+        bgColor='#49C858'
+        borderWidth="0px"
+        textColor="#fff"
+        name={userInfo.username}
+      />
+    ) : (
+      <img
+        alt=""
+        style={{ height: "30px", width: "30px" }}
+        src={profileImage + '/' + userInfo.id}
+        className="rounded-circle"
+        onError={() => setBrokenImages((prev) => [...prev, `img-${userInfo.id}`])}
+        id={`img-${userInfo.id}`}
+      />
+    )}
+    <Badge style={{ fontSize: ".9rem" }} bg="light" text="dark" className="mx-2">
+      {userInfo.username}
+    </Badge>
+    <Badge bg="success" style={{ fontSize: ".9rem" }}>
+      {userInfo.userrole}
+    </Badge>
+  </NavLink>
+
+  <NavLink
+    to="#"
+    className="d-flex p-0"
+    style={{ alignItems: "center", textDecoration: 'none' }}
+  >
+    <span className="mx-2" style={{ fontSize: ".9rem" }}>Company</span>
+    <Badge style={{ fontSize: ".9rem" }} bg="secondary">
+      {userInfo.companyname}
+    </Badge>
+  </NavLink>
+</Nav>
           <Nav className="ml-auto d-flex align-items-center">
           {whatsappSetting.length > 0 && userInfo.userrole != 'SYS_ADMIN' && (
             <Form.Select 

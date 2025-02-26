@@ -8,7 +8,7 @@ import { isMobile, MobileView, BrowserView } from 'react-device-detect';
 // import jwt_decode from "jwt-decode";
 import { DatatableWrapper, Filter, Pagination, PaginationOptions, TableBody, TableHeader, } from "react-bs-datatable";
 import { Link } from "react-router-dom";
-
+import ImportLeads from "./ImportLeads";
 const LeadList = () => {
   const navigate = useNavigate();
   const [body, setBody] = useState([]);
@@ -16,20 +16,36 @@ const LeadList = () => {
   const [lead, setLead] = useState();
   const [leadStatusArray, setleadStatusArray] = useState(JSON.parse(sessionStorage.getItem('lead_status')));
   const [isSpinner, setIsSpinner] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+
+  const init = async () => {
+    const leads = await WhatsAppAPI.fetchLead();
+    if (leads) {
+      setBody(leads);
+      setLead(leads);
+    } else {
+      setBody([]);
+      setLead([]);
+    }
+    setIsSpinner(true);
+    // setLeadName(leads?.firstname + " " + leads?.lastname);
+  };
+
+
 
   useEffect(() => {
 
-    async function init() {
-      const leads = await WhatsAppAPI.fetchLead();
-      if (leads) {
-        setBody(leads);
-        setLead(leads);
-      } else {
-        setBody([]);
-        setLead([]);
-      }
-      setIsSpinner(true);
-    }
+    // async function init() {
+    //   const leads = await WhatsAppAPI.fetchLead();
+    //   if (leads) {
+    //     setBody(leads);
+    //     setLead(leads);
+    //   } else {
+    //     setBody([]);
+    //     setLead([]);
+    //   }
+    //   setIsSpinner(true);
+    // }
     init();
     setLeadName(body.firstname + " " + body.lastname);
   }, [leadname]);
@@ -88,15 +104,15 @@ const LeadList = () => {
           </Link>
         ),
       },
-      { title: "whatsapp number", prop: "whatsapp_number" },
-      { title: "Lead Source", prop: "leadsource" },
-      { title: "Lead Status", prop: "leadstatus", },
+      { title: "whatsapp number", prop: "whatsapp_number",isSortable: true},
+      { title: "Lead Source", prop: "leadsource", isSortable: true },
+      { title: "Lead Status", prop: "leadstatus",isSortable: true },
       {
         title: "Actions",
         prop: "actions",
         cell: (row) => (
-          <Button className="btn-sm mx-2" onClick={() => editLead(row)}>
-            <i className="fa-regular fa-pen-to-square"></i>
+          <Button className="btn-sm mx-2"  onClick={() => editLead(row)}>
+            <i className="fa-regular fa-pen-to-square" title="Edit"></i>
           </Button>
         ),
       }
@@ -117,13 +133,13 @@ const LeadList = () => {
             <Link to={"/users/" + row.ownerid} state={row}>
               <i className="fa-solid fa-user"></i> {row.ownername}
             </Link>
-            <span><i className="fa-solid fa-phone"></i> {row.phone}</span>
+            <span><i className="fa-solid fa-phone"></i> {row.whatsapp_number}</span>
             <span style={{ width: "80%" }}><i className="fa-solid fa-envelope"></i> {row.email}</span>
             <Badge bg={getStatusClass(row.leadstatus)} style={{ paddingBottom: "5px", width: "80%" }}>
               {row.leadstatus}
             </Badge>
             <Button className="btn-sm mx-2" onClick={() => editLead(row)}>
-              <i className="fa-regular fa-pen-to-square"></i> Edit
+              <i className="fa-regular fa-pen-to-square" title="Edit"></i> Edit
             </Button>
           </div>
         ),
@@ -139,6 +155,16 @@ const LeadList = () => {
   const createLead = () => {
     navigate(`/leads/e`);
   };
+
+  const handleImportLeads = () => {
+    setShowModal(true)
+  }
+
+  const refreshData = () => {
+  setShowModal(false);
+  // setIsSpinner(false); 
+  init();
+  }
 
   return (
     <>
@@ -197,6 +223,9 @@ const LeadList = () => {
                         lg={3}
                         className="d-flex flex-col justify-content-end align-items-end"
                       >
+                      <Button className="btn-sm mx-1" variant="outline-primary" onClick={handleImportLeads}>
+                      Import Leads
+                      </Button>
                         <Button
                           className="btn-sm"
                           variant="outline-primary mx-2"
@@ -237,6 +266,13 @@ const LeadList = () => {
         </div>
 
       }
+         {showModal && (
+            <ImportLeads
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                refreshData={refreshData}
+            />
+          )}
     </>
   );
 };
