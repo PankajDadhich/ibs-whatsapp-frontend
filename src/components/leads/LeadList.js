@@ -104,9 +104,9 @@ const LeadList = () => {
           </Link>
         ),
       },
-      { title: "whatsapp number", prop: "whatsapp_number",isSortable: true},
-      { title: "Lead Source", prop: "leadsource", isSortable: true },
-      { title: "Lead Status", prop: "leadstatus",isSortable: true },
+      { title: "whatsapp number", prop: "whatsapp_number", isFilterable : true},
+      { title: "Lead Source", prop: "leadsource", isFilterable : true },
+      { title: "Lead Status", prop: "leadstatus", isFilterable : true },
       {
         title: "Actions",
         prop: "actions",

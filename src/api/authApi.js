@@ -27,17 +27,7 @@ const authApi = {
 
   async fetchMyImage() {
     const token = sessionStorage.getItem("token");
-    // let response = await fetch(
-    //   constants.API_BASE_URL + "/api/auth/myimage",
-    //   {
-    //     method: "GET",
-    //     //mode: "cors",
-
-    //     headers: {
-    //       "Authorization": token
-    //     }
-    //   }
-    // );
+   
     let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/auth/myimage", 'GET');
     
     if (response.status === 200) {
@@ -51,17 +41,7 @@ const authApi = {
 
   async fetchUserImage(userid) {
     const token = sessionStorage.getItem("token");
-    // let response = await fetch(
-    //   constants.API_BASE_URL + "/api/auth/userimage/" + userid,
-    //   {
-    //     method: "GET",
-    //     //mode: "cors",
-
-    //     headers: {
-    //       "Authorization": token
-    //     }
-    //   }
-    // );
+   
     let response = await helper.fetchWithAuth(constants.API_BASE_URL + "/api/auth/userimage/" + userid, 'GET');
    
     const fileBody = await response.blob();

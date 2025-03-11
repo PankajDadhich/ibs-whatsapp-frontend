@@ -101,10 +101,8 @@ const EditProfile = ({ userId }) => {
           profile.whatsapp_number.length === 10
             ? "91" + profile.whatsapp_number
             : profile.whatsapp_number;
-        console.log("profile->", profile);
 
         result = await WhatsAppAPI.saveUser(profile);
-        console.log("result-?", result);
         if (result.errors) {
           toast.error(result.errors);
         } else {

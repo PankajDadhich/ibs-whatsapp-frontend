@@ -125,7 +125,10 @@ const WhatsappChatbot = ({ socket }) => {
                         status: 'Outgoing',
                         recordtypename: userDetails.recordtypename || '',
                         file_id: null,
-                        is_read: true
+                        is_read: true,
+                        // business_number: phoneNumber,
+                        message_id: result?.messages[0]?.id,
+                        interactive_id: null
                     }
 
                     const responce = await WhatsAppAPI.insertMsgHistoryRecords(newMessage);

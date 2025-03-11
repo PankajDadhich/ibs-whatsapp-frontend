@@ -146,6 +146,16 @@ const Sidebar = () => {
               <i className="fa fa-user-circle mx-2"></i>My Profile
             </span>
           </li>
+          <li className={location.pathname.includes('/interactive_message') ? 'active' : ''}>
+            <span className="custom-link-sidebar" onClick={() => navigatePage("/interactive_message", false)}>
+              <i className="fa-solid fa-wand-magic-sparkles mx-2"></i>Quick/Canned Replies
+            </span>
+          </li>
+          <li className={location.pathname.includes('/chatbot') ? 'active' : ''}>
+            <span className="custom-link-sidebar" onClick={() => navigatePage("/chatbot", false)}>
+              <i className="fa fa-robot mx-2"></i>Chatbot
+            </span>
+          </li>
           </ul>
 
           <div className="sidebar-header" style={{ padding: "2rem 2rem 2rem 1rem", borderTop: "1px solid #fff", textAlign: "center" }}>

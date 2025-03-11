@@ -147,7 +147,7 @@ const UserAdd = () => {
             if (result.success) {
                 toast.success('Record saved successfully.');
                 const userId = finalUser.id ? finalUser.id : result.id;
-                navigate(`/users/${userId}`, { state: finalUser });
+                navigate(`/users`);
             } else {
                 if (typeof result.errors === 'string') {
                     toast.error(`${result.errors}`);

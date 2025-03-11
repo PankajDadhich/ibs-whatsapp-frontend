@@ -131,6 +131,7 @@ const UserView = ({selectedWhatsAppSetting}) => {
                 <Button className='mx-2 btn-sm' variant="outline-light" onClick={handleBack} >
                   Back
                 </Button>
+                
                 <Button className='mx-2 btn-sm' variant="light" onClick={() => editUser({ user })} >
                   Edit
                 </Button>

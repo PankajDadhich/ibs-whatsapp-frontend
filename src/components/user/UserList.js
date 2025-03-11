@@ -166,11 +166,16 @@ const UserList = () => {
                       <Col xs={12} sm={6} lg={4} className="d-flex flex-col justify-content-start align-items-start"                      >
                         <PaginationOptions labels={labels} />
                       </Col>
-                        <Col xs={12} sm={6} lg={4} className="d-flex flex-col justify-content-end align-items-end" >
-                        <Button className="btn-sm" variant="outline-primary" onClick={() => createUser(true)}>
-                          Add New User
-                        </Button>
+                      {userInfo?.userrole === 'ADMIN' &&
+
+                                            
+                      <Col xs={12} sm={6} lg={4} className="d-flex flex-col justify-content-end align-items-end" >
+                      <Button className="btn-sm" variant="outline-primary" onClick={() => createUser(true)}>
+                        Add New User
+                      </Button>
                       </Col>
+
+                      }
                     </Row>
                     <Table striped className="data-table" responsive="sm">
                       <TableHeader />

@@ -83,7 +83,6 @@ const Home = ({selectedWhatsAppSetting, userInfo}) => {
 
 
           // billingCosts?.result?.map((data)=> billingCost += data.cost || 0);
-          console.log("billingCosts",billingCosts);
         }
       } catch (error) {
         console.error("Error fetching data:", error);

@@ -41,7 +41,6 @@ const InvoiceView = (props) => {
 
     const fetchSetting = async (name) => {
         const settingResponse = await WhatsAppAPI.getSetting(name);
-       console.log('settingResponse', settingResponse);
         if (settingResponse) {
             setSettings(settingResponse?.setting);
         } else {
@@ -245,7 +244,8 @@ const InvoiceView = (props) => {
                                     </tr>
                                     <tr>
                                         <td className="text-end fw-bold">Total Amount:</td>
-                                        <td>{invoice.total_amount + ((parseInt(invoice?.total_amount) * parseInt(settings?.value)) / 100)}</td>
+                                        {/* <td>{invoice.total_amount + ((parseInt(invoice?.total_amount) * parseInt(settings?.value)) / 100)}</td> */}
+                                        <td>{invoice.total_amount}</td>
                                     </tr>
                                     </tbody>
                                 </Table>

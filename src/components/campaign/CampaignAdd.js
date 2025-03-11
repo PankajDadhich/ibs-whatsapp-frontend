@@ -156,13 +156,12 @@ const CampaignAdd = ({ selectedWhatsAppSetting, userInfo }) => {
       toast.error("Failed to fetch templates.");
     }
   };
-console.log("tamplateparms ->",tamplateparms);
 
   const fetchGroupRecords = async () => {
     const result = await WhatsAppAPI.fetchGroups(true);
     if (result.success) {
-      const filteredGroups = result.records?.filter(
-        (item) => item.members && item.members.length > 0
+      const filteredGroups =  result.records?.filter(
+        (item) => item.members && item.members.length > 0 && item?.status
       );
       const groupResult =
         filteredGroups?.map((item) => ({ value: item.id, label: item.name })) ||
@@ -337,7 +336,6 @@ if (tamplateparms && typeof tamplateparms === "object") {
   const campaignparamsResult = await WhatsAppAPI.insertCampaignParamsRecords(
     campaign_template_params
   );
-  console.log("campaignparamsResult->",campaignparamsResult);
   
 }
 
@@ -400,7 +398,6 @@ if (tamplateparms && typeof tamplateparms === "object") {
     const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
     saveAs(blob, "contacts.csv");
   };
-  console.log("setSelectedTemplateName",selectedTemplateName);
   
   return (
     <>
@@ -586,8 +583,8 @@ if (tamplateparms && typeof tamplateparms === "object") {
   <Col lg={6} sm={12} xs={12}>
     <Form.Group className="mb-3 mx-2">
       <Form.Label htmlFor="formType">Template</Form.Label><br/>
-      <Button className="w-50" onClick={() => setshow(true)} 
-                          variant="outline-secondary">Select Template</Button>  <span>{selectedTemplateName?.name}</span>
+      <Button className="w-100 btn-group" onClick={() => setshow(true)} 
+                          variant="outline-primary">{selectedTemplateName?.name || 'Select Template'} </Button> 
     </Form.Group>
   </Col>
 </Row>

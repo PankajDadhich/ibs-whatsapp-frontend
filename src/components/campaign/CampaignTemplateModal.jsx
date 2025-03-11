@@ -34,7 +34,6 @@ const CampaignTemplateModal = ({
   const [isSpinner, setIsSpinner] = useState(false);
   const categories = ["AUTHENTICATION", "UTILITY", "MARKETING"];
   const [parameters, setParameters] = useState({});
-console.log("selectedTemplateName ->",selectedTemplateName);
 
   useEffect(() => {
     // console.log("userInfo",userInfo)
@@ -51,7 +50,6 @@ console.log("selectedTemplateName ->",selectedTemplateName);
     );
     setFilteredTemplates(filtered);
   };
-console.log("userInfo0>",userInfo);
 
   const fetchAllTemplate = async (selectedWhatsAppSetting) => {
     const result = await WhatsAppAPI.getApprovedTemplates(
@@ -181,7 +179,7 @@ console.log("userInfo0>",userInfo);
     const selectedName = event.target.value;
 setParameters({})
 setTemplateParms({});
-    const template = allTemplateData.find((t) => t.name === selectedName);
+    const template = allTemplateData.find((t) => t.id === selectedName);
 
     if (template) {
       const {
@@ -222,7 +220,6 @@ setTemplateParms({});
         business_number: selectedWhatsAppSetting,
       };
       setSelectedTemplateName(formattedTemplate);
-      console.log("result", formattedTemplate);
     } else {
       setSelectedTemplateName();
     }
@@ -236,7 +233,6 @@ setTemplateParms({});
 
   const handleParametersChange = (newParams) => {
     setParameters(newParams);
-    console.log("newParams", newParams);
   };
 
   const handleSubmit = async (event) => {
@@ -244,7 +240,6 @@ setTemplateParms({});
 
    
     event.preventDefault();
-    console.log(parameters);
 
     let documentId = null;
 let adminPhone = null;
@@ -270,7 +265,6 @@ if (parameters.sendToAdmin && userInfo?.whatsapp_number) {
     : userInfo?.whatsapp_number;
 }
 
-console.log("adminPhone->",adminPhone);
 
 parameters.whatsapp_number_admin = adminPhone || null;
 
@@ -351,11 +345,11 @@ setIsSpinner(true)
                         name="templateName"
                         onChange={handleChange}
                         placeholder="Select Template Name"
-                         value={selectedTemplateName?.name}
+                         value={selectedTemplateName?.id}
                       >
                         <option value="">Select Template Name</option>
                         {filteredTemplates?.map((template) => (
-                          <option key={template.id} value={template.name}>
+                          <option key={template.id} value={template.id}>
 {  template?.message_body
 ?.match(/\{\{(\d+)\}\}/g)?.length>0 ? `${template.templatename} {{-}} `:  template.templatename}
                             

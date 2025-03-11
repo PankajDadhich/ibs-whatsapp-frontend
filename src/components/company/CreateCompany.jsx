@@ -341,6 +341,10 @@ const CreateCompany = () => {
     e.preventDefault();
 
     try {
+
+      if (formData.user_info.whatsapp_number && formData.user_info.whatsapp_number.length === 10) {
+        formData.user_info.whatsapp_number = `91${formData.user_info.whatsapp_number}`;
+    }
       const result = formData.company_info.companyId ? await WhatsAppAPI.updateCompanyWithUser(formData) : await WhatsAppAPI.createCompany(formData);
       if (result.success) {
         toast.success(formData.company_info.companyId ? 'Record updated successfully.' : 'Record created successfully.');

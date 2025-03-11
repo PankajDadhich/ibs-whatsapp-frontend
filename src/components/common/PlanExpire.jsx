@@ -4,7 +4,6 @@ import { useNavigate} from 'react-router-dom';
 
 const PlanExpire = ({userInfo}) => {
   const navigate = useNavigate();  
-  console.log("userInfo",userInfo.companyid)
 
   const handleUpgrade = () => {
     navigate('/payment/'+userInfo.companyid, { state: userInfo });

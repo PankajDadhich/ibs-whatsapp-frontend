@@ -1,3 +1,5 @@
 import ChatBot from "./ChatBot";
 import WhatsappChatbot from "./WhatsappChatbot";
-export { ChatBot, WhatsappChatbot }
+import ChatBotList from "./ChatBotList";
+import AddChatBot from "./AddChatBot";
+export { ChatBot, WhatsappChatbot, AddChatBot, ChatBotList }

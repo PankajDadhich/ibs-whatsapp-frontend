@@ -14,7 +14,7 @@ const Billing = ({ selectedWhatsAppSetting }) => {
   const [body, setBody] = useState([]);
   const [isSpinner, setIsSpinner] = useState(false);
   const [billBody, setBillBody] = useState([]);
-  const predefinedPaidLabels = ["MARKETING", "UTILITY", "AUTHENTICATION", "AUTHENTICATION_INTERNATIONAL", "SERVICE"];
+  const predefinedPaidLabels = ["MARKETING", "UTILITY", "AUTHENTICATION", "SERVICE"];
   const predefinedFreeLabels = ["FREE_TIER", "FREE_ENTRY_POINT"];
 
   const [dateRange, setDateRange] = useState([]);
@@ -51,25 +51,26 @@ const Billing = ({ selectedWhatsAppSetting }) => {
   // }
 
   useEffect(() => {
-    if (selectedWhatsAppSetting) { // Ensure selectedWhatsAppSetting is not empty or null
-      setDateRange([
-        {
-          startDate: moment().startOf('month').format(),
-          endDate: moment().endOf('month').format(),
-          key: 'selection'
-        }
-      ]);
-  
-      let firstdate = moment().tz("Asia/Kolkata").startOf('month').unix();
-      let lastdate = moment().tz("Asia/Kolkata").endOf('month').unix();
-      
+    setDateRange([
+      {
+        startDate: moment().startOf('month').format(),
+        endDate: moment().endOf('month').format(),
+        key: 'selection'
+      }
+    ]);
+
+    let firstdate = moment().tz("Asia/Kolkata").startOf('month').unix();
+    let lastdate = moment().tz("Asia/Kolkata").endOf('month').unix();
+    
+   
+     
       init(firstdate, lastdate);
       setIsSpinner(false);
-    }
+  
   }, [selectedWhatsAppSetting]);
   
   async function init(start = '', end = '') {
-    if (!selectedWhatsAppSetting) return; // Prevent API call if the value is empty
+    // if (!selectedWhatsAppSetting) return; // Prevent API call if the value is empty
   
     const billData = await WhatsAppAPI.getBillingCostsBySetting(selectedWhatsAppSetting, start, end);
   
