@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 // import moment from 'moment-timezone';
 // const moment = require('moment-timezone');
 
-const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
+const UtilityTemplate = ({ previewData, selectedWhatsAppSetting }) => {
     const initialFormData = {
         id: '',
         name: '',
@@ -45,8 +45,29 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
     const bodyRef = useRef(null);
     const [variables, setVariables] = useState([]);
 
+
     useEffect(() => {
         if (previewData && previewData?.category === 'UTILITY') {
+            const exampleBodyText = previewData.example_body_text[0] || []; // Extract the first example (if exists)
+
+
+            const expectedMaxPlaceholder = exampleBodyText.length;
+
+
+            const updatedExamples = Array.from(
+                { length: expectedMaxPlaceholder },
+                (_, index) => ({
+                    placeholder: index + 1,
+                    value: exampleBodyText[index] || "",
+                })
+            );
+
+
+            setRowData((prevData) => ({
+                ...prevData,
+                message_body: rowData.message_body,
+                message_body_example: updatedExamples,
+            }));
             const buttons = previewData?.buttons && previewData.buttons.length > 0
                 ? previewData.buttons.map(button => ({
                     type: button.type,
@@ -68,6 +89,7 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
                 header_document_url: previewData?.header_document_url || '',
                 header_video_url: previewData?.header_video_url || '',
                 message_body: previewData?.message_body || '',
+                message_body_example: updatedExamples || null,
                 footer: previewData?.footer || '',
                 buttons
             });
@@ -77,9 +99,9 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
             setSelectedDocument2(previewData?.header_document_url || null);
             setSelectedVideo2(previewData?.header_video_url || null);
 
-            const bodyText = previewData?.example_body_text[0] || [];
-            let varData = bodyText.map((item, idx) => ({id: idx+1, value: item}));
-            setVariables(varData);
+            //const bodyText = previewData?.example_body_text[0] || [];
+            //let varData = bodyText.map((item, idx) => ({id: idx+1, value: item}));
+            //setVariables(varData);
         } else {
             setRowData(initialFormData);
             setButtons([]);
@@ -87,7 +109,93 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
             setVariables([]);
         }
     }, [previewData]);
+    const addVariable = () => {
+       
+        const existingExamples = rowData?.message_body_example || [];
 
+
+        const newExample = {
+            placeholder: existingExamples.length + 1,
+            value: "",
+        };
+        const updatedExamples = [...existingExamples, newExample];
+        setRowData((prevData) => ({
+            ...prevData,
+            message_body_example: updatedExamples,
+            message_body:
+                `${prevData?.message_body} {{${existingExamples.length + 1}}} ` || "",
+        }));
+    };
+    useEffect(() => {
+        if (!rowData?.message_body) {
+            setRowData((prevData) => ({
+                ...prevData,
+
+                //message_body_example: null,
+            }));
+            return;
+        }
+
+        //const textarea = bodyRef.current;
+        //const startPosition = textarea.selectionStart;
+        //const endPosition = textarea.selectionEnd;
+        const placeholders = Array.from(
+            new Set(rowData.message_body.match(/{{\d+}}/g) || [])
+        ).map((val) => parseInt(val.match(/\d+/)[0]));
+
+
+        if (placeholders.length > 0) {
+            placeholders.sort((a, b) => a - b);
+
+            const maxPlaceholder = Math.max(...placeholders);
+            const expectedMaxPlaceholder = placeholders.length;
+
+            if (maxPlaceholder !== expectedMaxPlaceholder) {
+                const placeholderMap = new Map(
+                    placeholders.map((val, index) => [val, index + 1])
+                );
+                rowData.message_body = rowData.message_body.replace(
+                    /{{\d+}}/g,
+                    (match) =>
+                        `{{${placeholderMap.get(parseInt(match.match(/\d+/)[0]))}}}`
+                );
+            }
+
+
+
+            const existingExamples = rowData?.message_body_example || [];
+            const exampleMap = existingExamples.reduce((map, example) => {
+                map[example.placeholder] = example.value;
+                return map;
+            }, {});
+
+            const updatedExamples = Array.from(
+                { length: expectedMaxPlaceholder },
+                (_, index) => ({
+                    placeholder: index + 1,
+                    value: exampleMap[index + 1] || "",
+                })
+            );
+
+            setRowData((prevData) => ({
+                ...prevData,
+                message_body: rowData.message_body,
+                message_body_example: updatedExamples,
+            }));
+            //  setTimeout(() => {
+            //    textarea.selectionStart = startPosition + "{{}}".length;
+            //    textarea.selectionEnd = endPosition + "{{}}".length;
+            //    textarea.focus();
+            //}, 0);
+            //  setshowbody(true);
+        } else {
+            setRowData((prevData) => ({
+                ...prevData,
+                message_body_example: null,
+            }));
+            //  setshowbody(false);
+        }
+    }, [rowData?.message_body]);
     const handleChange = (event) => {
         const { name, value } = event.target;
 
@@ -96,9 +204,9 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
 
         let updatedValue = value;
 
-        if (name === 'message_body') {
-            updatedValue = renumberVariables(value);
-        }
+        if (name === 'message_body' && updatedValue==="") {            
+            setRowData(prevData => ({ ...prevData, message_body_example: null,}));            
+            }
 
         setRowData(prevData => ({ ...prevData, [name]: updatedValue }));
 
@@ -110,7 +218,7 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
             setErrorMessage('');
         }
 
-        setTimeout(()=>{
+        setTimeout(() => {
             textarea.selectionStart = textarea.selectionEnd = cursorPos;
         }, 0);
     }
@@ -141,7 +249,7 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
         }
 
         const validSize = fileSize[name];
-        if(file.size > validSize * 1024 * 1024) {
+        if (file.size > validSize * 1024 * 1024) {
             setErrorMessage(`Exceed maximum allowed upload size of ${validSize}MB.`);
             event.target.value = '';
             return;
@@ -203,10 +311,10 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
         let imageId = ''
 
         if (selectedFiles) {
-            const sessionId = await WhatsAppAPI.generateSessionId(selectedFiles,selectedWhatsAppSetting);
+            const sessionId = await WhatsAppAPI.generateSessionId(selectedFiles, selectedWhatsAppSetting);
 
             if (sessionId.id) {
-                const document = await WhatsAppAPI.uploadDocumentSessionId(selectedFiles, sessionId.id,selectedWhatsAppSetting);
+                const document = await WhatsAppAPI.uploadDocumentSessionId(selectedFiles, sessionId.id, selectedWhatsAppSetting);
                 imageId = document.h;
 
             }
@@ -233,7 +341,7 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
                     ...(rowData.message_body.match(/\{\{(\d+)\}\}/g)) && {
                         example: {
                             body_text: [
-                                Object.values(variables).map((data) => data.value)
+                                Object.values(rowData?.message_body_example).map((data) => data.value)
                             ]
                         }
                     }
@@ -259,9 +367,9 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
             setIsSpinner(true)
             let result;
             if (rowData?.id) {
-                result = await WhatsAppAPI.updateMarketingTemplate(rowData.id, reqBody,selectedWhatsAppSetting);
+                result = await WhatsAppAPI.updateMarketingTemplate(rowData.id, reqBody, selectedWhatsAppSetting);
             } else {
-                result = await WhatsAppAPI.createMarketingTemplate(reqBody,selectedWhatsAppSetting);
+                result = await WhatsAppAPI.createMarketingTemplate(reqBody, selectedWhatsAppSetting);
             }
 
 
@@ -288,8 +396,39 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
         navigate("/whatsapp_template");
     }
 
-    const isFormValid = Boolean(rowData.name.trim()) && Boolean(rowData.language) && Boolean(rowData.message_body.trim()) && Boolean(rowData.footer.trim()) && Boolean(variables.every(item => item.id && item.value));
-
+    //const isFormValid = Boolean(rowData.name.trim()) && Boolean(rowData.language) && Boolean(rowData.message_body.trim()) && Boolean(rowData.footer.trim()) && Boolean(variables.every(item => item.id && item.value));
+    //const isFormValid =
+    //    Boolean(rowData?.name?.trim()) &&
+    //    Boolean(rowData?.language) &&
+    //    Boolean(rowData?.message_body?.trim()) &&
+    //    rowData?.message_body?.trim()?.length >= 25 &&
+    //    Boolean(rowData?.footer?.trim()) &&
+    //    Array.isArray(rowData?.message_body_example) &&
+    //    rowData?.message_body_example?.every(item =>
+    //        Boolean(item?.placeholder) &&
+    //        typeof item?.value === "string" &&
+    //        Boolean(item?.value?.trim())
+    //    )
+    const isFormValid = 
+    Boolean(rowData?.header?.trim()) &&
+    Boolean(rowData?.name?.trim()) &&
+    Boolean(rowData?.language) &&
+    Boolean(rowData?.message_body?.trim()) &&
+    rowData?.message_body?.trim()?.length >= 25 &&
+    Boolean(rowData?.footer?.trim()) &&
+    (
+        Array.isArray(rowData?.message_body_example) 
+        ? rowData.message_body_example.every(item => 
+            item && 
+            typeof item === "object" &&
+            "placeholder" in item &&
+            Boolean(item.placeholder) &&
+            "value" in item &&
+            typeof item.value === "string" &&
+            Boolean(item.value.trim())
+          )
+        : true 
+    );
     const handleAddButton = () => {
         if (buttons.length < 2) {
             const newButton = { type: '', text: '', PHONE_NUMBER: '', url: '' };
@@ -323,12 +462,12 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
     }
 
     // generate the next available variable number
-    const getNextVariableNumber = () => {
-        const numbers = variables.map((v) => v.id);
-
-        const maxNumber = numbers.length > 0 ? Math.max(...numbers) : 0;
-        return maxNumber + 1;
-    };
+    //    const getNextVariableNumber = () => {
+    //        const numbers = variables.map((v) => v.id);
+    //
+    //        const maxNumber = numbers.length > 0 ? Math.max(...numbers) : 0;
+    //        return maxNumber + 1;
+    //    };
 
     const formatTextArea = (character) => {
         if (!bodyRef.current) return;
@@ -336,56 +475,56 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
         const textarea = bodyRef.current;
         const startPosition = textarea.selectionStart;
         const endPosition = textarea.selectionEnd;
-        if (character !== null) {
-            const selectedText = text.substring(startPosition, endPosition);
-            const newText = text.substring(0, startPosition) + character + selectedText + character + text.substring(endPosition);
-            // console.log('newText: ', newText);
-            setRowData((prevData) => ({ ...prevData, message_body: newText }));
+        //if (character !== null) {
+        const selectedText = text.substring(startPosition, endPosition);
+        const newText = text.substring(0, startPosition) + character + selectedText + character + text.substring(endPosition);
+        // console.log('newText: ', newText);
+        setRowData((prevData) => ({ ...prevData, message_body: newText }));
 
-            // Set cursor after inserted text
-            setTimeout(() => {
-                textarea.selectionStart = startPosition + character.length;
-                textarea.selectionEnd = endPosition + character.length;
-                textarea.focus();
-            }, 0);
-        } else {
-            let variableNumber = getNextVariableNumber();
-            character = ` {{${variableNumber}}}`;
-            const newText = text + character;
-            // console.log('newText: ', newText);
-            setRowData((prevData) => ({ ...prevData, message_body: newText }));
-
-            if (!variables.some((v) => v.id === variableNumber)) {
-                setVariables([...variables, { id: variableNumber, value: "" }])
-            }
-            // Set cursor after inserted variable
-            setTimeout(() => {
-                textarea.selectionStart = textarea.selectionEnd = newText.length;
-                textarea.focus();
-            }, 0);
-        }
+        // Set cursor after inserted text
+        setTimeout(() => {
+            textarea.selectionStart = startPosition + character.length;
+            textarea.selectionEnd = endPosition + character.length;
+            textarea.focus();
+        }, 0);
+        //        } else {
+        //            let variableNumber = getNextVariableNumber();
+        //            character = ` {{${variableNumber}}}`;
+        //            const newText = text + character;
+        //            // console.log('newText: ', newText);
+        //            setRowData((prevData) => ({ ...prevData, message_body: newText }));
+        //
+        //            if (!variables.some((v) => v.id === variableNumber)) {
+        //                setVariables([...variables, { id: variableNumber, value: "" }])
+        //            }
+        //            // Set cursor after inserted variable
+        //            setTimeout(() => {
+        //                textarea.selectionStart = textarea.selectionEnd = newText.length;
+        //                textarea.focus();
+        //            }, 0);
+        //        }
     }
 
     // renumber variables sequentially
-    const renumberVariables = (updatedText) => {
-        const matches = updatedText.match(/\{\{(\d+)\}\}/g) || [];
-
-        const extractedNumbers = matches.map((match) => parseInt(match.replace(/[{}]/g, ""), 10));
-
-        // Filter existing variables & remove those missing in the textarea
-        const updatedVars = variables.filter((v) => extractedNumbers.includes(v.id));
-        // Renumber variables sequentially
-        updatedVars.sort((a, b) => a.id - b.id).forEach((v, index) => (v.id = index + 1));
-        
-        setVariables(updatedVars);
-
-        // Update textarea with renumbered variables
-        matches.forEach((match, index) => {
-            updatedText = updatedText.replace(match, `{{${index + 1}}}`);
-        });
-        console.log('updatedText: ', updatedText);
-        return updatedText;
-    };
+    //    const renumberVariables = (updatedText) => {
+    //        const matches = updatedText.match(/\{\{(\d+)\}\}/g) || [];
+    //
+    //        const extractedNumbers = matches.map((match) => parseInt(match.replace(/[{}]/g, ""), 10));
+    //
+    //        // Filter existing variables & remove those missing in the textarea
+    //        const updatedVars = variables.filter((v) => extractedNumbers.includes(v.id));
+    //        // Renumber variables sequentially
+    //        updatedVars.sort((a, b) => a.id - b.id).forEach((v, index) => (v.id = index + 1));
+    //        
+    //        setVariables(updatedVars);
+    //
+    //        // Update textarea with renumbered variables
+    //        matches.forEach((match, index) => {
+    //            updatedText = updatedText.replace(match, `{{${index + 1}}}`);
+    //        });
+    //        console.log('updatedText: ', updatedText);
+    //        return updatedText;
+    //    };
 
     return (
         <>
@@ -526,7 +665,7 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
                                                             onChange={handleFileChange}
                                                         />
                                                         <Form.Text>Maximum Size: 5MB</Form.Text>
-                                                        {errorMessage && <><br/><Form.Text className="text-danger">{errorMessage}</Form.Text></>}
+                                                        {errorMessage && <><br /><Form.Text className="text-danger">{errorMessage}</Form.Text></>}
                                                     </Form.Group>
                                                     {selectedImage2 ?
                                                         <Image className='mx-3' variant="top" src={selectedImage2} thumbnail style={{ width: "15%" }}>
@@ -551,7 +690,7 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
                                                             onChange={handleFileChange}
                                                         />
                                                         <Form.Text>Maximum Size: 100MB</Form.Text>
-                                                        {errorMessage && <><br/><Form.Text className="text-danger">{errorMessage}</Form.Text></>}
+                                                        {errorMessage && <><br /><Form.Text className="text-danger">{errorMessage}</Form.Text></>}
                                                     </Form.Group>
                                                     {selectedDocument2 ?
                                                         <Form.Text className="text-muted mx-2">
@@ -581,7 +720,7 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
                                                             onChange={handleFileChange}
                                                         />
                                                         <Form.Text>Maximum Size: 16MB</Form.Text>
-                                                        {errorMessage && <><br/><Form.Text className="text-danger">{errorMessage}</Form.Text></>}
+                                                        {errorMessage && <><br /><Form.Text className="text-danger">{errorMessage}</Form.Text></>}
                                                     </Form.Group>
 
                                                     {selectedVideo2 ?
@@ -624,10 +763,13 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
                                                     <button className='format-text-btn' onClick={() => formatTextArea('_')} data-bs-toggle="tooltip" title="Italic"><i className="fa-solid fa-italic"></i></button>
                                                     <button className='format-text-btn' onClick={() => formatTextArea('~')} data-bs-toggle="tooltip" title="Strike-through"><i className="fa-solid fa-strikethrough"></i></button>
                                                     <button className='format-text-btn' onClick={() => formatTextArea('```')} data-bs-toggle="tooltip" title="Monospace"><i className="fa-solid fa-code"></i></button>
-                                                    <button className='format-text-btn' onClick={() => formatTextArea(null)}><i className="fa-solid fa-plus"></i> <span className='fw-bold ps-2'>Add variable</span></button>
+                                                    {/*<button className='format-text-btn' onClick={() => formatTextArea(null)}><i className="fa-solid fa-plus"></i> <span className='fw-bold ps-2'>Add variable</span></button>*/}
+                                                    <button onClick={addVariable} className='format-text-btn'>
+                                                        <i className="fa-solid fa-plus"></i> <span className='fw-bold ps-2'>Add variable</span>
+                                                    </button>
                                                 </Col>
 
-                                                <Col xs={12}>
+                                                {/*<Col xs={12}>
                                                     {
                                                         variables.length ?
                                                         <Table>
@@ -658,6 +800,57 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
                                                                 }
                                                             </tbody>
                                                         </Table> : ''
+                                                    }
+                                                </Col>*/}
+                                                <Col xs={12}>
+                                                    {
+                                                        rowData?.message_body_example ?
+                                                            <Table>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th className='w-25'>Variable</th>
+                                                                        <th className='w-25'>Value</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {rowData?.message_body_example?.map(
+                                                                        (example, index) => (
+                                                                            <tr key={index}>
+                                                                                <td>
+                                                                                    {`{{${example.placeholder}}}`}
+                                                                                </td>
+                                                                                <td>
+                                                                                    <Form.Control
+                                                                                        required
+                                                                                        type="text"
+                                                                                        name={`${example.placeholder}.value`}
+                                                                                        value={example.value || ""}
+                                                                                        onChange={(e) => {
+                                                                                            const updatedValue = e.target.value;
+                                                                                            setRowData((prevData) => ({
+                                                                                                ...prevData,
+                                                                                                message_body_example:
+                                                                                                    prevData.message_body_example.map(
+                                                                                                        (item) =>
+                                                                                                            item.placeholder ===
+                                                                                                                example.placeholder
+                                                                                                                ? {
+                                                                                                                    ...item,
+                                                                                                                    value: updatedValue,
+                                                                                                                }
+                                                                                                                : item
+                                                                                                    ),
+                                                                                            }));
+                                                                                        }}
+                                                                                        placeholder={`Enter content for {{${example.placeholder}}}`}
+                                                                                    />
+                                                                                </td>
+                                                                            </tr>
+                                                                        )
+                                                                    )}
+                                                                </tbody>
+                                                            </Table>
+                                                            : ''
                                                     }
                                                 </Col>
                                             </div>
@@ -748,7 +941,7 @@ const UtilityTemplate = ({ previewData,selectedWhatsAppSetting }) => {
                                                                     required
                                                                     type="text"
                                                                     value={button.phone_number}
-                                                                    onChange={(e) => handleButtonChange(index, 'phone_number', e.target.value)}
+                                                                    onChange={(e) => handleButtonChange(index, 'phone_number', e.target.value.replace(/\D/g, ''))}
                                                                     placeholder="16467043595"
                                                                     style={{ height: "36px" }}
                                                                 />

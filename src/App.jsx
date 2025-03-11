@@ -18,6 +18,7 @@ import { Alert, Toast, ToastContainer } from "react-bootstrap";
 import { UserAdd, UserList, UserTracking, UserView } from "./components/user";
 import jwt_decode from "jwt-decode";
 import io from "socket.io-client";
+
 import Main from "./components/layout/Main";
 
 import WhatsAppMessenger from "./components/whatsapp_messenger/WhatsAppMessenger";
@@ -51,11 +52,15 @@ import LeadsView from './components/public_leads/LeadsView';
 import PlanExpire from "./components/common/PlanExpire";
 import Payment from "./components/Payment";
 import Billing from "./components/Billing";
+import { InteractiveMessage, AddInteractiveMessage } from "./components/interactive_message";
+import { ChatBotList, AddChatBot } from "./components/chatbot";
+import Templateview from "./components/whatsapp_template/TemplateView";
+
 
 // import RazorPay from "./components/rozerpay/RazorPay";
 
 
-const ENDPOINT = 'https://sandbox.watconnect.com/swp' || 'http://localhost:4004';
+const ENDPOINT = 'https://sandbox.watconnect.com' || 'http://localhost:4004';
 // const ENDPOINT = 'https://api.indicrm.io/';
 
 function App() {
@@ -103,38 +108,38 @@ function App() {
         // console.log('userInfouserInfouserInfouserInfouserInfo',userInfo)
         const perm = user?.permissions?.map((obj) => obj.name).join(';');
         setPermissions(perm);
-        // let socket = io(ENDPOINT, {
-        //   path: '/ibs/socket.io',
-        //   transports: ['websocket'],
-        //   reconnection: true,
-        //   // reconnectionAttempts: 5,
-        //   // reconnectionDelay: 1000,
-        // });
+        let socket = io(ENDPOINT, {
+          path: '/swp/socket.io',
+          transports: ['websocket'],
+          reconnection: true,
+          // reconnectionAttempts: 5,
+          // reconnectionDelay: 1000,
+        });
 
-        // socket.on("connect", () => {
-        //   console.log('Socket connected:', socket.id);
-        //   socket.emit("setup", user);
-        //   setConnectedSocket(socket);
-        // });
+        socket.on("connect", () => {
+          console.log('Socket connected:', socket.id);
+          socket.emit("setup", user);
+          setConnectedSocket(socket);
+        });
 
-        // socket.on("connected", () => {
-        //   console.log('Socket setup complete');
-        // });
+        socket.on("connected", () => {
+          console.log('Socket setup complete');
+        });
 
-        // socket.on("receivedwhatsappmessage", (item) => {
-        //   console.log('#Received WhatsApp item:', item);
-        //   console.log('##socket', socket)
-        // });
+        socket.on("receivedwhatsappmessage", (item) => {
+          // console.log('#Received WhatsApp item:', item);
+          // console.log('##socket', socket)
+        });
 
-        // socket.on("disconnect", (reason) => {
-        //   console.log('Socket disconnected:', reason);
-        // });
+        socket.on("disconnect", (reason) => {
+          console.log('Socket disconnected:', reason);
+        });
 
-        // socket.on("connect_error", (err) => {
-        //   console.error('Connection error:', err);
-        // });
+        socket.on("connect_error", (err) => {
+          console.error('Connection error:', err);
+        });
 
-        // setConnectedSocket(socket);
+        setConnectedSocket(socket);
 
         return () => {
           if (connectedSocket) {
@@ -187,7 +192,14 @@ function App() {
             <Route path="/403" element={<AccessDenied />} />
             <Route path="/402" element={<PlanExpire userInfo={userInfo} />} />
             <Route path="/payment/:id" element={<Payment />} />
+            <Route path="/chatbot" element={<ChatBotList selectedWhatsAppSetting={selectedWhatsAppSetting}  />} />
+            <Route path="/chatbot/add" element={<AddChatBot selectedWhatsAppSetting={selectedWhatsAppSetting}  />} />
+            <Route path="/chatbot/:id/e" element={<AddChatBot selectedWhatsAppSetting={selectedWhatsAppSetting}  />} />
 
+            <Route path="/interactive_message" element={<InteractiveMessage selectedWhatsAppSetting={selectedWhatsAppSetting}  />} />
+            <Route path="interactive_message/add" element={<AddInteractiveMessage selectedWhatsAppSetting={selectedWhatsAppSetting}  />} />
+            <Route path="interactive_message/:id/e" element={<AddInteractiveMessage selectedWhatsAppSetting={selectedWhatsAppSetting}  />} />
+          
             {/******** Show an User By Id *******/}
 
             <Route path="/users" element={<UserList />} />
@@ -234,6 +246,7 @@ function App() {
             }>
               <Route index element={<Templates selectedWhatsAppSetting={selectedWhatsAppSetting} />} />
               <Route path="add" element={<TemplateAdd selectedWhatsAppSetting={selectedWhatsAppSetting} />} />
+              <Route path="view" element={<Templateview selectedWhatsAppSetting={selectedWhatsAppSetting} />} />
             </Route>
 
             <Route path="/whatsapp_messenger" element={

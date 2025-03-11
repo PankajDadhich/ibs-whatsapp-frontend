@@ -30,7 +30,6 @@ const TemplatePreview = ({ template, onParametersChange,tamplateparms,setParamet
         file: null
     });
 }, [template]);
-console.log(" tamplateparms=>",tamplateparms);
 //useEffect(() => {
 //  setParameters({});
 //

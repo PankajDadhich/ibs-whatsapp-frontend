@@ -11,6 +11,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import moment from 'moment-timezone';
 import WhatsAppAPI from '../../api/WhatsAppAPI';
 import { MultiSelect } from 'react-multi-select-component';
+import jwt_decode from "jwt-decode";
+
 const CampaignEdit = (props) => {
     const [campaignData, setCampaignData] = useState(props?.rowData || {
         campaign_id: '',
@@ -26,6 +28,12 @@ const CampaignEdit = (props) => {
     const [selectedGroups, setSelectedGroups] = useState(
         (props?.rowData?.groups || []).map(group => ({ value: group.id, label: group.name }))
     );
+    const [userInfo, setUserInfo] = useState(
+        jwt_decode(sessionStorage.getItem("token"))
+      );
+
+    const hasGroupsModule = userInfo?.modules?.some(module => module.url === "groups") || false;
+
     useEffect(() => {
         fetchAllTemplate();
         fetchGroupRecords();
@@ -212,6 +220,7 @@ const CampaignEdit = (props) => {
                                     </Form.Select>
                                 </Form.Group>
                             </Col> */}
+                            {hasGroupsModule && (
                             <Col lg={6} sm={12} xs={12}>
                                 <Form.Group className="mb-3">
                                     <Form.Label>Groups</Form.Label>
@@ -222,7 +231,7 @@ const CampaignEdit = (props) => {
                                         labelledBy="Select Groups"
                                     />
                                 </Form.Group>
-                            </Col>
+                            </Col>)}
                             <Col lg={6} sm={12} xs={12}>
                                 <Form.Group className="mb-3" controlId="formStartDate">
                                     <Form.Label>Start Date & Time</Form.Label>

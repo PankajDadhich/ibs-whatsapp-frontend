@@ -138,7 +138,9 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                         file_id: null,
                         is_read: true,
                         business_number : selectedWhatsAppSetting,
-                        message_id:messageId
+                        message_id:messageId,
+                        interactive_id: null
+
                     }
 
                     const responce = await WhatsAppAPI.insertMsgHistoryRecords(newMessage);
@@ -186,7 +188,6 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
 
 
     const renderFilePreview = (msg) => {
-        // console.log("msg",msg);
         const isLink = msg.chatmsg && msg.chatmsg.match(/(https?:\/\/[^\s]+)/g);
         const googleMapsUrlRegex = /https?:\/\/(www\.)?google\.com\/maps\/.+|https?:\/\/maps\.app\.goo\.gl\/[a-zA-Z0-9]+/g;
         const googleMapsUrlMatch = msg.chatmsg && msg.chatmsg.match(googleMapsUrlRegex);
@@ -283,7 +284,7 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                     {msg.message_body && (
                         <div className='mt-2 ms-1'>
                             <p className='fw-bold mb-1 text-capitalize'>{(msg?.header_body && msg.header === "TEXT") && msg?.header_body}</p>
-                            <p className='mb-1'> {formatMessage(msg.message_body, msg.example_body_text)}</p>
+                            <p className='mb-1'> {formatMessage(msg.message_body, msg.body_text_params)}</p>
                             <p className='mb-1 text-secondary'> {msg?.footer}</p>
                         </div>
                     )}
@@ -294,7 +295,7 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
         if (msg.message_body) {
             return (
                 <div>
-                  {formatMessage(msg.message_body, msg.example_body_text)}
+                  {formatMessage(msg.message_body, msg.body_text_params)}
                     {/* {formatMessage(msg.message_body)} */}
                     {msg?.footer}
                 </div>
@@ -304,6 +305,10 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
 
         // const fileUrl = `/public/${userInfo.tenantcode}/attachment/${msg.title}`;
         switch (msg.filetype) {
+            case '.jpeg':
+            case '.jpg':
+            case '.png':
+            case '.webp':  
             case 'jpeg':
             case 'jpg':
             case 'png':
@@ -321,6 +326,7 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                     </div>
                 );
             case 'pdf':
+            case '.pdf':
                 return (
                     <div style={{ position: 'relative' }}>
                         <a href={fileUrl} target="_blank" rel="noopener noreferrer">
@@ -343,9 +349,15 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
             case 'amr':
             case 'ogg':
             case 'opus':
+            case '.aac':
+            case '.mpeg':
+            case '.mp3':
+            case '.amr':
+            case '.ogg':
+            case '.opus':
                 return (
                     <div>
-                        <audio controls>
+                       <audio controls className="audio-player">
                             <source src={fileUrl} type={`audio/${msg.filetype}`} />
                         </audio>
                     </div>
@@ -354,6 +366,10 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
             case 'pptx':
             case 'doc':
             case 'docx':
+            case '.ppt':
+            case '.pptx':
+            case '.doc':
+            case '.docx':
                 return (
                     <div style={{ position: 'relative' }}>
                         <a href={fileUrl} target="_blank" rel="noopener noreferrer">
@@ -372,6 +388,8 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                 );
             case 'xlsx':
             case 'xls':
+            case '.xlsx':
+            case '.xls':
                 return (
                     <div style={{ position: 'relative' }}>
                         <a href={fileUrl} target="_blank" rel="noopener noreferrer">
@@ -389,6 +407,7 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                     </div>
                 );
             case 'txt':
+            case '.txt':
                 return (
                     <div style={{ position: 'relative' }}>
                         <a href={fileUrl} target="_blank" rel="noopener noreferrer">
@@ -407,12 +426,16 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                 );
             case 'mp4':
             case '3gpp':
+            case '.mp4':
+            case '.3gpp':
                 return (
                     <div>
                         <video controls style={{ maxWidth: '100%', maxHeight: '200px' }}>
-                            <source src={fileUrl} type={`video/${msg.filetype}`} />
+                            {/* <source src={fileUrl} type={`video/${msg.filetype}`} /> */}
+                            <source src={fileUrl} type={`video/${msg.filetype.replace('.', '')}`} />
                             Your browser does not support the video element.
                         </video>
+                        {msg?.description}
                     </div>
                 );
             default:
@@ -488,7 +511,7 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                                 return (
                                     <div
                                         key={index}
-                                        onClick={() => copyToClipboard(msg.example_body_text)}
+                                        onClick={() => copyToClipboard(msg.body_text_params)}
                                         style={{ cursor: 'pointer', textAlign: 'center' }}
                                     >
                                         <Badge
@@ -607,28 +630,6 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                         <Card.Body className=''>
                             <Row className='g-0'>
                                 <Col lg={12} sm={12} xs={12} className='mb-2'>
-                                    {/* {messages?.map((msg, index) => (
-                                        <div className='conversation' key={index}>
-                                            <div className='conversation-container'>
-                                                <div className={`message ${msg.status === 'Incoming' ? 'received' : 'sent'}`}>
-                                                    <div>
-                                                        {renderFilePreview(msg)}
-                                                    </div>
-                                                    {(msg.buttons && msg.buttons.length > 0) &&
-                                                        <div className='mb-1 mt-3'>
-                                                            {renderWebsiteAndCall(msg)}
-                                                        </div>
-                                                    }
-
-                                                    <span className='metadata'>
-                                                        <span className='time'>
-                                                            {moment(msg.createddate).format('M/D/YYYY, h:mm A')}
-                                                        </span>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))} */}
                                     {Object.entries(groupedMessages)
                                         .sort(([dateA], [dateB]) => moment(dateA).diff(moment(dateB)))
                                         .map(([date, dateMessages]) => (
@@ -651,7 +652,9 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                                                                         {renderWebsiteAndCall(msg)}
                                                                     </div>
                                                                 }
-
+                                                                {msg?.err_message && (
+                                                                    <span className="text-danger">{msg?.err_message}</span>
+                                                                )}
                                                                 <span className='metadata'>
                                                                     <span className='time'>
                                                                         {moment(msg.createddate).format('h:mm A')}
@@ -672,6 +675,23 @@ const WhatsAppChat = ({ show, onHide, userDetail, socket, filterData, selectedWh
                                                                                     />
                                                                                 </svg>
                                                                                 )}
+                                                                                  {msg.delivery_status === 'failed' && (
+                                                                                        <svg
+                                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                                            width="16"
+                                                                                            height="16"
+                                                                                            viewBox="0 0 24 24"
+                                                                                            fill="none"
+                                                                                            stroke="#ff3b30"
+                                                                                            strokeWidth="2"
+                                                                                            strokeLinecap="round"
+                                                                                            strokeLinejoin="round"
+                                                                                        >
+                                                                                            <circle cx="12" cy="12" r="10"/>
+                                                                                            <line x1="12" y1="8" x2="12" y2="12"/>
+                                                                                            <line x1="12" y1="16" x2="12" y2="16"/>
+                                                                                        </svg>
+                                                                                    )}
                                                                             </span>
                                                                             )}
 

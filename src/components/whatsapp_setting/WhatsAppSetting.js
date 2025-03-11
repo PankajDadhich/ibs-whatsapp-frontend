@@ -51,17 +51,22 @@ const WhatsAppSetting = () => {
         { title: "WhatsApp Business Account ID", prop: "whatsapp_business_account_id" },
         { title: "End Point Url", prop: "end_point_url" },
         { title: "Phone", prop: "phone" },
-        {
-            title: "Actions",
-            prop: "id",
-            cell: (row) => (
-                <>
-                    <Button className="btn-sm mx-2 " onClick={() => editRecord({ row })}>
-                        <i className="fa-solid fa-pen-to-square" title='Edit'></i>
-                    </Button>
-                </>
-            ),
-        },
+        ...(
+            userInfo?.userrole === "SYS_ADMIN"
+                ? [{
+                    title: "Actions",
+                    prop: "id",
+                    cell: (row) => (
+                        <>
+                            <Button className="btn-sm mx-2" onClick={() => editRecord({ row })}>
+                                <i className="fa-solid fa-pen-to-square" title="Edit"></i>
+                            </Button>
+                        </>
+                    ),
+                }]
+                : []
+        )
+
     ];
 
     const editRecord = (data) => {
@@ -115,9 +120,10 @@ const WhatsAppSetting = () => {
                                                 <PaginationOptions labels={labels} />
                                             </Col>
                                            <Col lg={4} sm={12} xs={12} className="mt-2 d-flex flex-col justify-content-end align-items-end">
-                                                    <Button className="btn btn-sm" variant="outline-secondary" onClick={() => createRecord()}>
+                                           { userInfo.userrole !== "USER" && 
+                                             <Button className="btn btn-sm" variant="outline-secondary" onClick={() => createRecord()}>
                                                         Add New Setting
-                                                    </Button>
+                                                    </Button>}
                                                 </Col>
                                         </Row>
                                         <Table striped className="data-table" responsive="sm">

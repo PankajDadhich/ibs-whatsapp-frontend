@@ -268,7 +268,7 @@ const AuthenticationTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                                         </Col>
                                         <Col lg={6} sm={12} xs={12} className='mt-4 pt-3'>
                                             <Form.Group className='mx-3 mb-3' controlId="formBasicSecurityRecommendation">
-                                                <Form.Check
+                                                {/* <Form.Check
                                                     className='mx-3'
                                                     name='add_security_recommendation'
                                                     type="checkbox"
@@ -276,7 +276,24 @@ const AuthenticationTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                                                     onChange={handleChange}
                                                     label="Add Security Recommendation"
                                                     style={{ height: "36px" }}
-                                                />
+                                                /> */}
+                                                <Form.Check
+                                                    className="mx-3"
+                                                    name="add_security_recommendation"
+                                                    type="checkbox"
+                                                    checked={rowData?.add_security_recommendation}
+                                                    onChange={handleChange}
+                                                    label={
+                                                        <span style={{ color: rowData?.add_security_recommendation ? "inherit" : "red" }}>
+                                                        Add Security Recommendation *
+                                                        </span>
+                                                    }
+                                                    style={{
+                                                        height: "36px",
+                                                        
+                                                    }}
+                                                    isInvalid={!rowData?.add_security_recommendation}
+                                                    />
                                             </Form.Group>
                                         </Col>
                                     </Row>

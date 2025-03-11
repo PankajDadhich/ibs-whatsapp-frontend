@@ -34,7 +34,7 @@ const LeadView = () => {
     <>
       <Container className='mt-5'>
         <Row className='mx-5 section-header'>
-          <Col lg={12} sm={12} xs={12} >
+          <Col lg={12} sm={12} xs={12}>
             <Row className='view-form-header align-items-center'>
               <Col lg={8} sm={8} xs={8} className="text-capitalize">
                 Lead

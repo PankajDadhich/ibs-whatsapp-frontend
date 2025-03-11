@@ -685,6 +685,11 @@ textarea.form-control[required] {
   z-index: 1;
 }
 
+.audio-player {
+  width: -webkit-fill-available;
+  width: stretch;
+}
+
 .message:after {
   position: absolute;
   content: "";

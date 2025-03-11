@@ -70,7 +70,6 @@ const helper = {
             body: JSON.stringify({ refreshToken }),
           });
         
-        console.log('Ref Response: ', response);
         
         if (!response.ok)
           throw new Error('Failed to refresh token');

@@ -40,7 +40,8 @@ const CampaignView = () => {
         { title: "Name", prop: "name", isFilterable: true, },
         { title: "Phone", prop: "number", isFilterable: true },
         { title: "Status", prop: "status", isFilterable: true },
-        { title: "Message", prop: "message", isFilterable: true },
+        { title: "Delivery Status", prop: "delivery_status", isFilterable: true },
+        { title: "Message", prop: "err_message", isFilterable: true },
     ];
 
     const handleDownload = () => {
@@ -65,8 +66,8 @@ const CampaignView = () => {
     }
 
     const convertToCSV = (data) => {
-        const header = ['Name', 'Phone', 'Status', 'Message'];
-        const rows = data.map(item => [item.name, item.number, item.status, item.message]);
+        const header = ['Name', 'Phone', 'Status', 'Delivery Status', 'Error Message'];
+        const rows = data.map(item => [item.name, item.number, item.status, item.delivery_status, item.err_message]);
         return [
             header.join(','), // header row
             ...rows.map(row => row.join(',')) // data rows

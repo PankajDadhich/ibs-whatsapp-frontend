@@ -130,7 +130,7 @@ const MessageTemplateModal = ({ show, onHide, contactData, refreshData, filterDa
     const handleChange = async (event) => {
         setParameters({});
         const selectedName = event.target.value;
-        const template = allTemplateData.find(t => t.name === selectedName);
+        const template = allTemplateData.find(t => t.id === selectedName);
 
         if (template) {
             const { id, name, language, category, header, header_text, header_image_url, header_document_url, header_video_url, message_body, example_body_text, footer, buttons } = template;
@@ -154,7 +154,6 @@ const MessageTemplateModal = ({ show, onHide, contactData, refreshData, filterDa
 
     const handleParametersChange = (newParams) => {
         setParameters(newParams);
-        console.log("newParams",newParams);
       };
     
     const handleSubmit = async (event) => {
@@ -185,15 +184,14 @@ const MessageTemplateModal = ({ show, onHide, contactData, refreshData, filterDa
 
         
         try {
-
             if (parameters.file) {
                 const formData = new FormData();
                 formData.append("messaging_product", "whatsapp");
                 formData.append("file", parameters.file);
                 formData.append("description", "Attachment");
-                 fileResult = await WhatsAppAPI.createFile(body[0].id, formData);
+                let id = body[0].id || groupId;
+                 fileResult = await WhatsAppAPI.createFile(id, formData);
                   
-                console.log("fileResult",fileResult);
                 const uploadResponse = await WhatsAppAPI.uploadDocumentWithApi(formData, selectedWhatsAppSetting);
     
                 if (uploadResponse?.id) {
@@ -304,16 +302,45 @@ const MessageTemplateModal = ({ show, onHide, contactData, refreshData, filterDa
                         file_id: fileResult?.records[0]?.id || null,
                         is_read: true,
                         business_number:selectedWhatsAppSetting,
-                        message_id:messageId
+                        message_id:messageId,
+                        interactive_id: null
                     };
                     if (filterData.recordType !== 'groups') {
                         const response = await WhatsAppAPI.insertMsgHistoryRecords(newMessage);
+
+                        const { sendToAdmin, file, file_id, whatsapp_number_admin, ...restParameters } = parameters || {}; 
+
+                        if (Object.keys(restParameters).length > 0) {  
+                            const campaign_template_params = {
+                                "campaign_id": null,
+                                "body_text_params": restParameters,  
+                                "msg_history_id": response?.id || null,  
+                                "file_id": fileResult?.records[0]?.id || null,  
+                                "whatsapp_number_admin": userInfo?.whatsapp_number || null  
+                            };
+                        
+                            const campaignparamsResult = await WhatsAppAPI.insertCampaignParamsRecords(campaign_template_params);
+                        } 
                     }
                 }
             }
 
             if (filterData.recordType === 'groups') {
                 const response = await WhatsAppAPI.insertMsgHistoryRecords(newMessage);
+
+                const { sendToAdmin, file, file_id, whatsapp_number_admin, ...restParameters } = parameters || {}; 
+
+                if (Object.keys(restParameters).length > 0) {  
+                    const campaign_template_params = {
+                        "campaign_id": null,
+                        "body_text_params": restParameters,  
+                        "msg_history_id": response?.id || null,  
+                        "file_id": fileResult?.records[0]?.id || null,  
+                        "whatsapp_number_admin": userInfo?.whatsapp_number || null  
+                    };
+                
+                    const campaignparamsResult = await WhatsAppAPI.insertCampaignParamsRecords(campaign_template_params);
+                } 
             }
           
 
@@ -406,9 +433,12 @@ const MessageTemplateModal = ({ show, onHide, contactData, refreshData, filterDa
                 >
                     <option value="">Select Template Name</option>
                     {(category ? filteredTemplates : allTemplateData)?.map((template) => (
-                        <option key={template.id} value={template.name}>
-                            {template.templatename}
-                        </option>
+                             <option key={template.id} value={template.id}>
+                             {  template?.message_body
+                                     ?.match(/\{\{(\d+)\}\}/g)?.length>0 ? `${template.templatename} {{-}} `:  template.templatename}
+    
+                             {/* {template.templatename} */}
+                         </option>
                     ))}
                 </Form.Select>
             </Form.Group>

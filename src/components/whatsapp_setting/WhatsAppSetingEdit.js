@@ -47,6 +47,7 @@ const WhatsAppSetingEdit = (props) => {
             if (result.success) {
                 toast.success(settingData.id ? 'Record updated successfully.' : 'Record created successfully.');
                 setTimeout(() => {
+                    sessionStorage.setItem('selectedWhatsAppSetting', settingData.phone);
                     props.onRefreshData();
                     setIsSpinner(false)
                 }, 1000)

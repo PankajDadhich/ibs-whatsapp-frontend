@@ -144,7 +144,7 @@ const TemplateModal = ({ show, onHide, contactData, refreshData, filterData,sele
     const handleChange = async (event) => {
         const selectedName = event.target.value;
 
-        const template = allTemplateData.find(t => t.name === selectedName);
+        const template = allTemplateData.find(t => t.id === selectedName);
 
         if (template) {
             const { id, name, language, category, header, header_text, header_image_url, header_document_url, header_video_url, message_body, example_body_text, footer, buttons } = template;
@@ -282,7 +282,7 @@ const TemplateModal = ({ show, onHide, contactData, refreshData, filterData,sele
             } else {
                 const messageId = result.messages[0].id;
                 // console.log("messageId",messageId);
-                 await WhatsAppAPI.insertMsgHistoryRecords({
+                const msgHistoryResult = await WhatsAppAPI.insertMsgHistoryRecords({
                     parent_id: contactData.id || null,
                     name: contactData?.contactname || '',
                     message_template_id: msgResult.id || null,
@@ -293,9 +293,25 @@ const TemplateModal = ({ show, onHide, contactData, refreshData, filterData,sele
                     file_id: fileResult?.records[0]?.id || null,
                     is_read: true,
                     business_number: selectedWhatsAppSetting,
-                    message_id: messageId
+                    message_id: messageId,
+                    interactive_id: null
                 });
+                const { sendToAdmin, file, file_id, whatsapp_number_admin, ...restParameters } = parameters || {}; 
+
+                if (Object.keys(restParameters).length > 0) {  
+                    const campaign_template_params = {
+                        "campaign_id": null,
+                        "body_text_params": restParameters,  
+                        "msg_history_id": msgHistoryResult?.id || null,  
+                        "file_id": fileResult?.records[0]?.id || null,  
+                        "whatsapp_number_admin": userInfo?.whatsapp_number || null  
+                    };
                 
+                    const campaignparamsResult = await WhatsAppAPI.insertCampaignParamsRecords(campaign_template_params);
+                } 
+                
+                      
+
             }
     
             // Step 5: Send to Admin (if enabled)
@@ -309,7 +325,7 @@ const TemplateModal = ({ show, onHide, contactData, refreshData, filterData,sele
                 
                 if (!adminResult.error) {
                     const adminMessageId = adminResult.messages[0].id;
-                    await WhatsAppAPI.insertMsgHistoryRecords({
+                    const adminMsgHistoryResult =  await WhatsAppAPI.insertMsgHistoryRecords({
                         parent_id: userInfo.id, 
                         name: userInfo.username,
                         message_template_id: msgResult.id || null,
@@ -320,10 +336,29 @@ const TemplateModal = ({ show, onHide, contactData, refreshData, filterData,sele
                         file_id: fileResult?.records[0]?.id || null,
                         is_read: true,
                         business_number: selectedWhatsAppSetting,
-                        message_id: adminMessageId
+                        message_id: adminMessageId,
+                        interactive_id: null
+
                     });
+
+                    const { sendToAdmin, file, file_id, whatsapp_number_admin, ...restParameters } = parameters || {}; 
+
+                    if (Object.keys(restParameters).length > 0) {  // Only proceed if restParameters has values
+                        const campaign_template_params = {
+                            "campaign_id": null,
+                            "body_text_params": restParameters,  
+                            "msg_history_id": adminMsgHistoryResult?.id || null,  
+                            "file_id": fileResult?.records[0]?.id || null,  
+                            "whatsapp_number_admin": userInfo?.whatsapp_number || null  
+                        };
+                    
+                        const campaignparamsResult = await WhatsAppAPI.insertCampaignParamsRecords(campaign_template_params);
+                    } else {
+                        console.warn("Skipping insertCampaignParamsRecords: restParameters is empty");
+                    }
                 }
             }
+            
         } catch (error) {
             toast.error("Failed to send message.");
             setIsSpinner(true);
@@ -402,7 +437,7 @@ const TemplateModal = ({ show, onHide, contactData, refreshData, filterData,sele
                                             >
                                                 <option value="">Select Template Name</option>
                                                 {filteredTemplates?.map((template) => (
-                                                    <option key={template.id} value={template.name}>
+                                                    <option key={template.id} value={template.id}>
                                                         {  template?.message_body
                                                                 ?.match(/\{\{(\d+)\}\}/g)?.length>0 ? `${template.templatename} {{-}} `:  template.templatename}
 

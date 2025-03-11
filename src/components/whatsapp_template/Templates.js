@@ -10,7 +10,7 @@ import { ToastContainer, toast } from 'react-toastify';//npm i react-toastify --
 import 'react-toastify/dist/ReactToastify.css';
 import WhatsAppAPI from '../../api/WhatsAppAPI';
 import { DatatableWrapper, Filter, Pagination, PaginationOptions, TableBody, TableHeader } from 'react-bs-datatable';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Confirm from '../Confirm';
 import jwt_decode from "jwt-decode";
 import helper from '../common/helper';
@@ -128,7 +128,8 @@ const Templates = ({selectedWhatsAppSetting}) => {
     // Create table headers consisting of 4 columns.
     const labels = { beforeSelect: " " };
     const header = [
-        { title: "name", prop: "templatename", isFilterable: true, },
+           { title: "Name", prop: "templatename", isFilterable: true, cell: (row) => (<Link to={"/whatsapp_template/view"} state={row}>{row.campaign_name}</Link>) },
+        //{ title: "name", prop: "templatename", isFilterable: true, },
         { title: "category", prop: "category", isFilterable: true },
         { title: "language", prop: "language", isFilterable: true },
         {

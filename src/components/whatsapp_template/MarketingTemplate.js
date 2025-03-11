@@ -42,10 +42,30 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
 
     const bodyRef = useRef(null);
     const [variables, setVariables] = useState([]);
-    
+
     useEffect(() => {
-        console.log('previewData: ', previewData);
         if (previewData && previewData?.category === 'MARKETING') {
+            const exampleBodyText = previewData.example_body_text[0] || []; // Extract the first example (if exists)
+
+
+      const expectedMaxPlaceholder = exampleBodyText.length;
+
+
+      const updatedExamples = Array.from(
+        { length: expectedMaxPlaceholder },
+        (_, index) => ({
+          placeholder: index + 1,
+          value: exampleBodyText[index] || "", 
+        })
+      );
+
+
+      setRowData((prevData) => ({
+        ...prevData,
+        message_body: rowData.message_body,
+        message_body_example: updatedExamples,
+      }));
+
             const buttons = previewData?.buttons && previewData.buttons.length > 0
                 ? previewData.buttons.map(button => ({
                     type: button.type,
@@ -55,6 +75,7 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                     ...(button.type === 'QUICK_REPLY' && { text: button.text }),
                 }))
                 : [];
+
 
             setRowData({
                 id: previewData?.id || '',
@@ -68,6 +89,7 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                 header_document_url: previewData?.header_document_url || '',
                 header_video_url: previewData?.header_video_url || '',
                 message_body: previewData?.message_body || '',
+                message_body_example:updatedExamples || null,
                 footer: previewData?.footer || '',
                 buttons
             });
@@ -77,9 +99,7 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
             setSelectedDocument2(previewData?.header_document_url || null);
             setSelectedVideo2(previewData?.header_video_url || null);
             // setSelectedFiles(previewData?.header_image_url || null)
-            const bodyText = previewData?.example_body_text[0] || [];
-            let varData = bodyText.map((item, idx) => ({id: idx+1, value: item}));
-            setVariables(varData);
+         
         } else {
             setRowData(initialFormData);
             setButtons([]);
@@ -87,7 +107,96 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
             setVariables([]);
         }
     }, [previewData]);
-
+    const addVariable = () => {
+      
+        const existingExamples = rowData?.message_body_example || [];
+       
+    
+        const newExample = {
+          placeholder: existingExamples.length + 1,
+          value: "",
+        };
+        const updatedExamples = [...existingExamples, newExample];
+        setRowData((prevData) => ({
+          ...prevData,
+          message_body_example: updatedExamples,
+          message_body:
+            `${prevData?.message_body} {{${existingExamples.length + 1}}} ` || "",
+        }));
+      };
+      useEffect(() => {
+        if (!rowData?.message_body)
+        {
+            setRowData((prevData) => ({
+                ...prevData,
+                
+                //message_body_example: null,
+              }));
+              return;
+        }
+    
+        //const textarea = bodyRef.current;
+        //const startPosition = textarea.selectionStart;
+        //const endPosition = textarea.selectionEnd;
+        const placeholders = Array.from(
+          new Set(rowData.message_body.match(/{{\d+}}/g) || [])
+        ).map((val) => parseInt(val.match(/\d+/)[0]));
+       
+    
+        if (placeholders.length > 0) {
+          placeholders.sort((a, b) => a - b);
+    
+          const maxPlaceholder = Math.max(...placeholders);
+          const expectedMaxPlaceholder = placeholders.length;
+    
+          if (maxPlaceholder !== expectedMaxPlaceholder) {
+            const placeholderMap = new Map(
+              placeholders.map((val, index) => [val, index + 1])
+            );
+            rowData.message_body = rowData.message_body.replace(
+              /{{\d+}}/g,
+              (match) =>
+                `{{${placeholderMap.get(parseInt(match.match(/\d+/)[0]))}}}`
+            );
+          }
+         
+         
+    
+          const existingExamples = rowData?.message_body_example || [];
+          const exampleMap = existingExamples.reduce((map, example) => {
+            map[example.placeholder] = example.value;
+            return map;
+          }, {});
+    
+          const updatedExamples = Array.from(
+            { length: expectedMaxPlaceholder },
+            (_, index) => ({
+              placeholder: index + 1,
+              value: exampleMap[index + 1] || "",
+            })
+          );
+    
+          setRowData((prevData) => ({
+            ...prevData,
+            message_body: rowData.message_body,
+            message_body_example: updatedExamples,
+          }));
+        //  setTimeout(() => {
+        //    textarea.selectionStart = startPosition + "{{}}".length;
+        //    textarea.selectionEnd = endPosition + "{{}}".length;
+        //    textarea.focus();
+        //}, 0);
+        //  setshowbody(true);
+        } else {
+            setRowData((prevData) => ({
+                ...prevData,
+                message_body_example: null,
+              }));
+        //  setshowbody(false);
+        }
+      }, [rowData?.message_body]);
+      
+    
     const handleChange = (event) => {
         const { name, value } = event.target;
 
@@ -96,8 +205,8 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
 
         let updatedValue = value;
 
-        if (name === 'message_body') {
-            updatedValue = renumberVariables(value);
+        if (name === 'message_body' && updatedValue==="") {            
+        setRowData(prevData => ({ ...prevData, message_body_example: null,}));            
         }
         setRowData(prevData => ({ ...prevData, [name]: updatedValue }));
 
@@ -109,7 +218,7 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
             setErrorMessage('');
         }
 
-        setTimeout(()=>{
+        setTimeout(() => {
             textarea.selectionStart = textarea.selectionEnd = cursorPos;
         }, 0);
     }
@@ -238,7 +347,7 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                     ...(rowData.message_body.match(/\{\{(\d+)\}\}/g)) && {
                         example: {
                             body_text: [
-                                Object.values(variables).map((data) => data.value)
+                                Object.values(rowData?.message_body_example).map((data) => data.value)
                             ]
                         }
                     }
@@ -352,23 +461,67 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
         }
         return false;
     };
+    //const isFormValid = Boolean(rowData.name.trim()) && Boolean(rowData.language) && Boolean(rowData.message_body.trim()) && rowData.message_body.trim().length >= 25 && Boolean(rowData.footer.trim()) && Boolean(rowData?.example_body_text?.every(item => item.id && item.value));
+    // if (Array.isArray(rowData?.message_body_example)) {
+    //     console.log("Is every item valid? ",
+    //         rowData.message_body_example.every(item => 
+    //             Boolean(item?.placeholder) && 
+    //             typeof item?.value === "string" && 
+    //             Boolean(item?.value?.trim())
+    //         )
+    //     );
+    // } else {
+    //     console.log("example_body_text is not an array or is undefined");
+    // }
+    
 
-    const isFormValid = Boolean(rowData.name.trim()) && Boolean(rowData.language) && Boolean(rowData.message_body.trim()) && rowData.message_body.trim().length >= 25 && Boolean(rowData.footer.trim()) && Boolean(variables.every(item => item.id && item.value));
+    //const isFormValid = 
+    //Boolean(rowData?.name?.trim()) &&
+    //Boolean(rowData?.language) &&
+    //Boolean(rowData?.message_body?.trim()) &&
+    //rowData?.message_body?.trim()?.length >= 25 &&
+    //Boolean(rowData?.footer?.trim()) &&(
+    //Array.isArray(rowData?.message_body_example) &&
+    //rowData?.message_body_example?.every(item => 
+    //    Boolean(item?.placeholder) && 
+    //    typeof item?.value === "string" && 
+    //    Boolean(item?.value?.trim()))
+    //)
+    const isFormValid = 
+    Boolean(rowData?.header?.trim()) &&
+    Boolean(rowData?.name?.trim()) &&
+    Boolean(rowData?.language) &&
+    Boolean(rowData?.message_body?.trim()) &&
+    rowData?.message_body?.trim()?.length >= 25 &&
+    Boolean(rowData?.footer?.trim()) &&
+    (
+        Array.isArray(rowData?.message_body_example) 
+        ? rowData.message_body_example.every(item => 
+            item && 
+            typeof item === "object" &&
+            "placeholder" in item &&
+            Boolean(item.placeholder) &&
+            "value" in item &&
+            typeof item.value === "string" &&
+            Boolean(item.value.trim())
+          )
+        : true 
+    );
 
     const handleVariableChange = (id, newValue) => {
         setVariables((prevValue) => prevValue.map((v) => v.id === id ? { ...v, value: newValue } : v));
     }
 
     // generate the next available variable number
-    const getNextVariableNumber = () => {
-        // const matches = rowData?.message_body?.match(/\{\{(\d+)\}\}/g) || [];
-        // const numbers = matches.map((match) => parseInt(match.replace(/[{}]/g, ""), 10));
-
-        const numbers = variables.map((v) => v.id);
-
-        const maxNumber = numbers.length > 0 ? Math.max(...numbers) : 0;
-        return maxNumber + 1;
-    };
+//    const getNextVariableNumber = () => {
+//        // const matches = rowData?.message_body?.match(/\{\{(\d+)\}\}/g) || [];
+//        // const numbers = matches.map((match) => parseInt(match.replace(/[{}]/g, ""), 10));
+//
+//        const numbers = variables.map((v) => v.id);
+//
+//        const maxNumber = numbers.length > 0 ? Math.max(...numbers) : 0;
+//        return maxNumber + 1;
+//    };
 
     const formatTextArea = (character) => {
         if (!bodyRef.current) return;
@@ -376,8 +529,8 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
         const textarea = bodyRef.current;
         const startPosition = textarea.selectionStart;
         const endPosition = textarea.selectionEnd;
-        if (character !== null) {
-            character = character.trim();  
+        //if (character !== null) {
+            character = character.trim();
             const selectedText = text.substring(startPosition, endPosition);
             const newText = text.substring(0, startPosition) + character + selectedText + character + text.substring(endPosition);
             // console.log('newText: ', newText);
@@ -389,66 +542,65 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                 textarea.selectionEnd = endPosition + character.length;
                 textarea.focus();
             }, 0);
-        } else {
-            let variableNumber = getNextVariableNumber();
-            character = ` {{${variableNumber}}}`;
-            const newText = text + character;
-            // console.log('newText: ', newText);
-            setRowData((prevData) => ({ ...prevData, message_body: newText }));
-
-            if (!variables.some((v) => v.id === variableNumber)) {
-                setVariables([...variables, { id: variableNumber, value: "" }])
-            }
-            // Set cursor after inserted variable
-            setTimeout(() => {
-                textarea.selectionStart = textarea.selectionEnd = newText.length;
-                textarea.focus();
-            }, 0);
-        }
+//        } else {
+//            let variableNumber = getNextVariableNumber();
+//            character = ` {{${variableNumber}}}`;
+//            const newText = text + character;
+//            // console.log('newText: ', newText);
+//            setRowData((prevData) => ({ ...prevData, message_body: newText }));
+//
+//            if (!variables.some((v) => v.id === variableNumber)) {
+//                setVariables([...variables, { id: variableNumber, value: "" }])
+//            }
+//            // Set cursor after inserted variable
+//            setTimeout(() => {
+//                textarea.selectionStart = textarea.selectionEnd = newText.length;
+//                textarea.focus();
+//            }, 0);
+//        }
     }
 
     // renumber variables sequentially
-    const renumberVariables = (updatedText) => {
-        const matches = updatedText.match(/\{\{(\d+)\}\}/g) || [];
-        // console.log('Re-match: ', matches);
-        // let count = 1;
-        // const newText = updatedText.replace(/\{\{(\d+)\}\}/g, () => `{{${count++}}}`);
-        // setVariables((prev) => { 
-        //     return matches.map((prevVariable, index) => { 
-        //         return `{{${index + 1}}}`; 
-        //     }) 
-        // });
+//    const renumberVariables = (updatedText) => {
+//        const matches = updatedText.match(/\{\{(\d+)\}\}/g) || [];
+//        // console.log('Re-match: ', matches);
+//        // let count = 1;
+//        // const newText = updatedText.replace(/\{\{(\d+)\}\}/g, () => `{{${count++}}}`);
+//        // setVariables((prev) => { 
+//        //     return matches.map((prevVariable, index) => { 
+//        //         return `{{${index + 1}}}`; 
+//        //     }) 
+//        // });
+//
+//        const extractedNumbers = matches.map((match) => parseInt(match.replace(/[{}]/g, ""), 10));
+//        console.log('extractedNumbers: ', extractedNumbers, variables);
+//
+//        // Filter existing variables & remove those missing in the textarea
+//        const updatedVars = variables.filter((v) => extractedNumbers.includes(v.id));
+//        console.log('updatedVars: ', updatedVars, updatedVars.sort((a, b) => a.id - b.id));
+//        // Renumber variables sequentially
+//        updatedVars.sort((a, b) => a.id - b.id).forEach((v, index) => (v.id = index + 1));
+//        console.log('updatedVars2: ', updatedVars);
+//
+//        setVariables(updatedVars);
+//
+//        // Update textarea with renumbered variables
+//        // let updatedText = rowData?.message_body;
+//        matches.forEach((match, index) => {
+//            updatedText = updatedText.replace(match, `{{${index + 1}}}`);
+//        });
+//        console.log('updatedText: ', updatedText);
+//        return updatedText;
+//    };
 
-        const extractedNumbers = matches.map((match) => parseInt(match.replace(/[{}]/g, ""), 10));
-        console.log('extractedNumbers: ', extractedNumbers, variables);
-
-        // Filter existing variables & remove those missing in the textarea
-        const updatedVars = variables.filter((v) => extractedNumbers.includes(v.id));
-        console.log('updatedVars: ', updatedVars, updatedVars.sort((a, b) => a.id - b.id));
-        // Renumber variables sequentially
-        updatedVars.sort((a, b) => a.id - b.id).forEach((v, index) => (v.id = index + 1));
-        console.log('updatedVars2: ', updatedVars);
-        
-        setVariables(updatedVars);
-
-        // Update textarea with renumbered variables
-        // let updatedText = rowData?.message_body;
-        matches.forEach((match, index) => {
-            updatedText = updatedText.replace(match, `{{${index + 1}}}`);
-        });
-        console.log('updatedText: ', updatedText);
-        return updatedText;
-    };
-
-    console.log('variables: ', variables, Object.values(variables));
     const helpText = (
         <ul>
-        <li>Variable parameters are missing or have mismatched curly braces. The correct format is \u007B\u007B1\u007D\u007D.</li>
-        <li>Variable parameters contain special characters such as #, $, or %.</li>
-        <li>Variable parameters are not sequential. For example, \u007B\u007B1\u007D\u007D, \u007B\u007B2\u007D\u007D, \u007B\u007B4\u007D\u007D, \u007B\u007B5\u007D\u007D are defined but \u007B\u007B3\u007D\u007D does not exist.</li>
-        <li>Template contains too many variable parameters relative to the message length. You need to decrease the number of variable parameters or increase the message length.</li>
-        <li>The message template cannot end with a parameter.</li>
-    </ul>
+            <li>Variable parameters are missing or have mismatched curly braces. The correct format is \u007B\u007B1\u007D\u007D.</li>
+            <li>Variable parameters contain special characters such as #, $, or %.</li>
+            <li>Variable parameters are not sequential. For example, \u007B\u007B1\u007D\u007D, \u007B\u007B2\u007D\u007D, \u007B\u007B4\u007D\u007D, \u007B\u007B5\u007D\u007D are defined but \u007B\u007B3\u007D\u007D does not exist.</li>
+            <li>Template contains too many variable parameters relative to the message length. You need to decrease the number of variable parameters or increase the message length.</li>
+            <li>The message template cannot end with a parameter.</li>
+        </ul>
     );
 
 
@@ -691,66 +843,88 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                                                     <button className='format-text-btn' onClick={() => formatTextArea('_')} data-bs-toggle="tooltip" title="Italic"><i className="fa-solid fa-italic"></i></button>
                                                     <button className='format-text-btn' onClick={() => formatTextArea('~')} data-bs-toggle="tooltip" title="Strike-through"><i className="fa-solid fa-strikethrough"></i></button>
                                                     <button className='format-text-btn' onClick={() => formatTextArea('```')} data-bs-toggle="tooltip" title="Monospace"><i className="fa-solid fa-code"></i></button>
-                                                    <button className='format-text-btn' onClick={() => formatTextArea(null)}><i className="fa-solid fa-plus"></i> <span className='fw-bold ps-2'>Add variable</span></button>
+                                                       <button onClick={addVariable}  className='format-text-btn'>
+                                <i className="fa-solid fa-plus"></i> <span className='fw-bold ps-2'>Add variable</span>
+                              </button>
+                                                    {/*<button className='format-text-btn' onClick={() => formatTextArea(null)}><i className="fa-solid fa-plus"></i> <span className='fw-bold ps-2'>Add variable</span></button>*/}
                                                     <OverlayTrigger
-                                                            placement="auto"
-                                                            overlay={
-                                                                <Popover id={`popover-positioned-auto`}>
+                                                        placement="auto"
+                                                        overlay={
+                                                            <Popover id={`popover-positioned-auto`}>
                                                                 <Popover.Body>
-                                                              
-                                                                <ul>
-                                <li>Variable parameters are missing or have mismatched curly braces. The correct format is &#123;&#123;1&#125;&#125;.</li>
-                                <li>Variable parameters should not contain special characters such as #, $, or %.</li>
-                                <li>Variable parameters are not sequential. For example, &#123;&#123;1&#125;&#125;, &#123;&#123;2&#125;&#125;, &#123;&#123;4&#125;&#125;, &#123;&#123;5&#125;&#125; are defined but &#123;&#123;3&#125;&#125; does not exist.</li>
-                                <li>Template contains too many variable parameters relative to the message length. You need to decrease the number of variable parameters or increase the message length.</li>
-                                <li>The message template cannot end with a parameter.</li>
-                            </ul>
 
-                                                            </Popover.Body>
+                                                                    <ul>
+                                                                        <li>Variable parameters are missing or have mismatched curly braces. The correct format is &#123;&#123;1&#125;&#125;.</li>
+                                                                        <li>Variable parameters should not contain special characters such as #, $, or %.</li>
+                                                                        <li>Variable parameters are not sequential. For example, &#123;&#123;1&#125;&#125;, &#123;&#123;2&#125;&#125;, &#123;&#123;4&#125;&#125;, &#123;&#123;5&#125;&#125; are defined but &#123;&#123;3&#125;&#125; does not exist.</li>
+                                                                        <li>Template contains too many variable parameters relative to the message length. You need to decrease the number of variable parameters or increase the message length.</li>
+                                                                        <li>The message template cannot end with a parameter.</li>
+                                                                    </ul>
+
+                                                                </Popover.Body>
                                                             </Popover>
-                                                            }
-                                                            >
-                                                            <i className="fa-solid fa-circle-info text-secondary" style={{ cursor: "pointer" }}></i>
-                                                            </OverlayTrigger>
+                                                        }
+                                                    >
+                                                        <i className="fa-solid fa-circle-info text-secondary" style={{ cursor: "pointer" }}></i>
+                                                    </OverlayTrigger>
                                                 </Col>
 
                                                 <Col xs={12}>
                                                     {
-                                                        variables.length ?
-                                                        <Table>
-                                                            <thead>
-                                                                <tr>
-                                                                    <th className='w-25'>Variable</th>
-                                                                    <th className='w-25'>Value</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                {
-                                                                    variables?.map(({ id, value }) => {
-                                                                        return (
-                                                                            <tr key={id}>
-                                                                                <td>{`{{${id}}}`}</td>
-                                                                                <td><Form.Control
-                                                                                    type="text"
-                                                                                    name={`value_${id}`}
-                                                                                    value={value}
-                                                                                    onChange={(e) => handleVariableChange(id, e.target.value)}
-                                                                                    placeholder={`Enter content for {{${id}}}`}
-                                                                                    required
-                                                                                    style={{ height: "36px" }}
-                                                                                /></td>
-                                                                            </tr>
-                                                                        )
-                                                                    })
-                                                                }
-                                                            </tbody>
-                                                        </Table>
-                                                        : ''
+                                                        rowData?.message_body_example ?
+                                                            <Table>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th className='w-25'>Variable</th>
+                                                                        <th className='w-25'>Value</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                
+                                                                       {rowData?.message_body_example?.map(
+                                  (example, index) => (
+                                 <tr key={index}>
+                                                                                    <td>
+                                          {`{{${example.placeholder}}}`}
+                                        </td>
+                                      
+                                      
+                                       <td>
+                                        <Form.Control
+                                          required
+                                          type="text"
+                                          name={`${example.placeholder}.value`}
+                                          value={example.value || ""}
+                                          onChange={(e) => {
+                                            const updatedValue = e.target.value;
+                                            setRowData((prevData) => ({
+                                              ...prevData,
+                                              message_body_example:
+                                                prevData.message_body_example.map(
+                                                  (item) =>
+                                                    item.placeholder ===
+                                                    example.placeholder
+                                                      ? {
+                                                          ...item,
+                                                          value: updatedValue,
+                                                        }
+                                                      : item
+                                                ),
+                                            }));
+                                          }}
+                                          placeholder={`Enter content for {{${example.placeholder}}}`}
+                                        />
+                               </td>
+                                    </tr>
+                                  )
+                                )}
+                                                                </tbody>
+                                                            </Table>
+                                                            : ''
                                                     }
                                                 </Col>
-                                            </div>
-                                        </Col>
-
+                                              </div>
+                                              </Col>
                                         <Col lg={6} sm={12} xs={12}>
                                             <Form.Group className='mx-3 mb-3'>
                                                 <Form.Label className="form-view-label" htmlFor="formBasicFooter">
@@ -802,23 +976,13 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                                                         <Col lg={3} sm={12} xs={12}>
                                                             <Form.Group className='mb-0'>
                                                                 <Form.Label className="form-view-label">Button Text</Form.Label>
-                                                                {/* <Form.Control
+                                                                <Form.Control
                                                                     type="text"
                                                                     value={button.text}
                                                                     onChange={(e) => handleButtonChange(index, 'text', e.target.value)}
                                                                     placeholder="Enter button text..."
                                                                     style={{ height: "36px" }}
-                                                                /> */}
-                                                                <Form.Control
-                                                                    required
-                                                                    type="tel"
-                                                                    pattern="[0-9]*"
-                                                                    value={button.phone_number}
-                                                                    onChange={(e) => handleButtonChange(index, 'phone_number', e.target.value.replace(/\D/g, ''))}  
-                                                                    placeholder="16467043595"
-                                                                    style={{ height: "36px" }}
                                                                 />
-
                                                             </Form.Group>
                                                         </Col>
                                                     )}
@@ -847,7 +1011,7 @@ const MarketingTemplate = ({ previewData, selectedWhatsAppSetting }) => {
                                                                     required
                                                                     type="text"
                                                                     value={button.phone_number}
-                                                                    onChange={(e) => handleButtonChange(index, 'phone_number', e.target.value)}
+                                                                    onChange={(e) => handleButtonChange(index, 'phone_number', e.target.value.replace(/\D/g, ''))}
                                                                     placeholder="16467043595"
                                                                     style={{ height: "36px" }}
                                                                 />

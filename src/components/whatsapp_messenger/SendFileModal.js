@@ -50,12 +50,21 @@ const SendFileModal = (props) => {
 
     const handleChange = (event) => {
         const selectedFiles = event.target.files;
+        if (!selectedFiles) {
+            setFiles(null);
+            return;
+        }
         let isValid = true;
-    
+        const sanitizedFiles = [];
+
         Array.from(selectedFiles).forEach((file) => {
             const fileType = file.type;
             const fileSize = file.size;
-    
+            
+            const sanitizedFileName = file.name.replace(/\s+/g, "_");
+            const sanitizedFile = new File([file], sanitizedFileName, { type: file.type });
+
+
             if (!MIMETypeMap.has(fileType)) {
                 isValid = false;
                 toast.error(`Unsupported file type: ${fileType}`);
@@ -76,13 +85,16 @@ const SendFileModal = (props) => {
                 if (fileSize > maxSize) {
                     isValid = false;
                     toast.error(`${file.name} file (${fileType}) exceeds the size limit. Max allowed: ${(maxSize / 1024 / 1024).toFixed(2)} MB.`);
+                }else {
+                    sanitizedFiles.push(sanitizedFile);
                 }
             }
         });
     
         if (isValid) {
-            setFiles(selectedFiles);
-            setIsFileSelected(selectedFiles.length > 0);
+            setFiles(sanitizedFiles);
+            setIsFileSelected(sanitizedFiles.length > 0);
+
         } else {
             event.target.value = null; // Reset file input
         }
@@ -161,7 +173,9 @@ const SendFileModal = (props) => {
                                     // call: '',
                                     // copy_code: '',
                                     is_read: true,
-                                    message_id:messageId
+                                    message_id:messageId,
+                                    interactive_id: null
+
                                 }
 
                                 const responseHistory = await WhatsAppAPI.insertMsgHistoryRecords(newMessage);

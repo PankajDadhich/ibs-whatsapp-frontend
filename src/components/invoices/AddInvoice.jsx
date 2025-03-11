@@ -437,17 +437,7 @@ const AddInvoice = (props) => {
 
     return (
         <>
-          {isLoading &&   <div className="sk-cube-grid">
-            <div className="sk-cube sk-cube1"></div>
-            <div className="sk-cube sk-cube2"></div>
-            <div className="sk-cube sk-cube3"></div>
-            <div className="sk-cube sk-cube4"></div>
-            <div className="sk-cube sk-cube5"></div>
-            <div className="sk-cube sk-cube6"></div>
-            <div className="sk-cube sk-cube7"></div>
-            <div className="sk-cube sk-cube8"></div>
-            <div className="sk-cube sk-cube9"></div>
-          </div>} 
+          
 
             <Container className='mt-5'>
                 <Row className='mx-5 text-center g-0'>
@@ -460,7 +450,19 @@ const AddInvoice = (props) => {
                     </Col>
                 </Row>
             </Container>
-            
+        { isLoading ?   
+            <div className="sk-cube-grid">
+            <div className="sk-cube sk-cube1"></div>
+            <div className="sk-cube sk-cube2"></div>
+            <div className="sk-cube sk-cube3"></div>
+            <div className="sk-cube sk-cube4"></div>
+            <div className="sk-cube sk-cube5"></div>
+            <div className="sk-cube sk-cube6"></div>
+            <div className="sk-cube sk-cube7"></div>
+            <div className="sk-cube sk-cube8"></div>
+            <div className="sk-cube sk-cube9"></div>
+          </div> : 
+          <>
             <Container className='mt-1 mb-5'>
             <Row className="view-form mb-4 g-0 mx-5">
                 <Card>
@@ -601,6 +603,9 @@ const AddInvoice = (props) => {
                 </Card>
             </Row>
             </Container>
+            </>
+            } 
+          
             
             <ToastContainer />
         </>

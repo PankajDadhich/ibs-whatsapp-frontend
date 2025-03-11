@@ -62,9 +62,7 @@ const WhatsAppMessenger = ({ socket, selectedWhatsAppSetting }) => {
 
     const fetchData = async () => {
         const { textName, cityName, recordType } = filters;
-        console.log("result",textName, cityName, recordType)
         let result = await WhatsAppAPI.getFilterData(textName, cityName, recordType);
-        console.log("result",result)
         if (result.success) {
             setBody(result.records);
         } else {
