@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 //export const API_BASE_URL = `${window.location.protocol}//${window.location.hostname}/swp`;
  export const API_BASE_URL = "http://localhost:4004";
+=======
+export const API_BASE_URL = `${window.location.protocol}//${window.location.hostname}/swp`;
+// export const API_BASE_URL = "http://localhost:4004";
+>>>>>>> 7e9db667582c7e95c4f451e3e5b1452d0b93b3f2
 //export const API_BASE_URL= "https://spark.indicrm.io/ibs";
 // export const API_BASE_URL= "http://192.168.6.50:3056";
 

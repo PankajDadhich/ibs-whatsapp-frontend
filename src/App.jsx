@@ -52,10 +52,6 @@ import LeadsView from './components/public_leads/LeadsView';
 import PlanExpire from "./components/common/PlanExpire";
 import Payment from "./components/Payment";
 import Billing from "./components/Billing";
-import { InteractiveMessage, AddInteractiveMessage } from "./components/interactive_message";
-import { ChatBotList, AddChatBot } from "./components/chatbot";
-import Templateview from "./components/whatsapp_template/TemplateView";
-
 
 // import RazorPay from "./components/rozerpay/RazorPay";
 
@@ -246,7 +242,7 @@ function App() {
             }>
               <Route index element={<Templates selectedWhatsAppSetting={selectedWhatsAppSetting} />} />
               <Route path="add" element={<TemplateAdd selectedWhatsAppSetting={selectedWhatsAppSetting} />} />
-              <Route path="view" element={<Templateview selectedWhatsAppSetting={selectedWhatsAppSetting} />} />
+              {/*<Route path="view" element={<Templateview selectedWhatsAppSetting={selectedWhatsAppSetting} />} />*/}
             </Route>
 
             <Route path="/whatsapp_messenger" element={
